@@ -1,0 +1,29 @@
+.amp-mode-buttons {
+  width: 100%;
+  height: 100%;
+  display: flex;
+
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(41,51,63,.8);
+  transition: all .3s;
+  opacity: 0;
+
+  position: absolute;
+  z-index: 101;
+}
+
+.amp-mode-buttons button {
+  margin: 10px;
+}
+
+.amp-mode-buttons:hover {
+  opacity: 1;
+}
+
+.amp-mode-buttons__hide {
+  opacity: 0;
+  pointer-events: none;
+}
