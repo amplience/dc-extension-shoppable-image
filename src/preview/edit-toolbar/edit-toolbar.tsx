@@ -5,6 +5,8 @@ import { useEditorContext } from "../../core/EditorContext";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Undo from "@mui/icons-material/Undo";
+import { Tooltip } from "@mui/material";
+import { GpsFixed, HighlightAlt } from "@mui/icons-material";
 
 export function EditToolbar({ className }: { className?: string }) {
   const { mode, changeMode } = useEditorContext();
@@ -17,34 +19,29 @@ export function EditToolbar({ className }: { className?: string }) {
     >
       <div className="amp-edit-toolbar__modescroll">
         <div className="amp-edit-toolbar__modes">
-          <Button
-            variant="contained"
-            color={mode === EditorMode.EditorPoi ? "primary" : "secondary"}
-            onClick={() => changeMode(EditorMode.EditorPoi)}
-            disableElevation
-          >
-            Focal Point
-          </Button>
+          <Tooltip title="Click to reposition the Focal Point.">
+            <Button
+              variant="contained"
+              color={mode === EditorMode.EditorPoi ? "primary" : "secondary"}
+              onClick={() => changeMode(EditorMode.EditorPoi)}
+              disableElevation
+            >
+              <GpsFixed className="amp-edit-toolbar__modeicon" />
+              Focal Point
+            </Button>
+          </Tooltip>
 
-          <Button
-            variant="contained"
-            color={mode === EditorMode.EditorHotspot ? "primary" : "secondary"}
-            onClick={() => changeMode(EditorMode.EditorHotspot)}
-            disableElevation
-          >
-            Hotspots
-          </Button>
-
-          <Button
-            variant="contained"
-            color={
-              mode === EditorMode.EditorPolygonRect ? "primary" : "secondary"
-            }
-            onClick={() => changeMode(EditorMode.EditorPolygonRect)}
-            disableElevation
-          >
-            Polygon
-          </Button>
+          <Tooltip title="Click to place a new Hotspot, or drag an existing one.">
+            <Button
+              variant="contained"
+              color={mode === EditorMode.EditorHotspot ? "primary" : "secondary"}
+              onClick={() => changeMode(EditorMode.EditorHotspot)}
+              disableElevation
+            >
+              <HighlightAlt className="amp-edit-toolbar__modeicon" />
+              Hotspots
+            </Button>
+          </Tooltip>
 
           <Divider orientation="vertical" variant="middle" flexItem />
 
@@ -53,6 +50,7 @@ export function EditToolbar({ className }: { className?: string }) {
             color="secondary"
             className="amp-edit-toolbar__reset"
             disableElevation
+            disabled
           >
             <Undo />
           </Button>

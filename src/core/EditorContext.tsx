@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+import { ShoppableImageHotspot, ShoppableImagePolygon } from "./ShoppableImageData";
 
 export enum EditorMode {
   Initial,
@@ -14,18 +15,28 @@ export enum EditorMode {
   Delete
 }
 
+export type MetadataSelection =
+  | ShoppableImageHotspot
+  | ShoppableImagePolygon
+  | undefined;
+
 interface EditorState {
   mode: EditorMode;
   changeMode(mode: EditorMode): void;
+  selection: MetadataSelection,
+  setSelection(selection: MetadataSelection): void
 }
 
 const dummySetter = () => {
   /* */
 };
 
+
 const defaultEditorState: EditorState = {
   mode: EditorMode.Initial,
-  changeMode: dummySetter
+  changeMode: dummySetter,
+  selection: undefined,
+  setSelection: dummySetter
 };
 
 const EditorContext = React.createContext(defaultEditorState);
@@ -37,15 +48,13 @@ export function WithEditorContext({
 }) {
   const [state, setState] = useState(defaultEditorState);
 
-  useEffect(() => {
-    const state: EditorState = { mode: EditorMode.Initial, changeMode: dummySetter };
+  state.changeMode = (mode: EditorMode) => {
+    setState({ ...state, mode: mode, selection: undefined });
+  }
 
-    state.changeMode = (mode: EditorMode) => {
-      setState({ ...state, mode: mode });
-    }
-
-    setState(state);
-  }, []);
+  state.setSelection = (selection: MetadataSelection) => {
+    setState({ ...state, selection })
+  }
 
   return (
     <EditorContext.Provider value={state}>

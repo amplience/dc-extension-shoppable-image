@@ -21,11 +21,18 @@ export function ModeButtons() {
         case EditorMode.Swap:
           field.image = await sdk.mediaLink.getImage();
 
+          field.poi = {} as any;
+          field.hotspots = [];
+          field.polygons = [];
+
           setField();
           changeMode(EditorMode.EditorPoi);
           break;
         case EditorMode.Delete:
           field.image = { _empty: true } as any;
+          field.poi = {} as any;
+          field.hotspots = [];
+          field.polygons = [];
           setField();
           break;
         default:

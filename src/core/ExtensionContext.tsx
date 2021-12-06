@@ -1,5 +1,6 @@
 import { ContentFieldExtension } from "dc-extensions-sdk";
 import React, { useEffect, useState } from "react";
+import { AutoResizer } from "./AutoResizer";
 import { getSdk } from "./ExtensionSdk";
 import { ShoppableImageData } from "./ShoppableImageData";
 
@@ -26,8 +27,7 @@ export function WithExtensionContext({
 
   useEffect(() => {
     getSdk().then(async (sdk) => {
-      sdk.frame.setHeight(500);
-      sdk.frame.startAutoResizer();
+      new AutoResizer(sdk);
 
       const params = { ...sdk.params.installation, ...sdk.params.instance };
       const field = await sdk.field.getValue() as ShoppableImageData;

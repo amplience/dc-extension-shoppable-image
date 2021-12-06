@@ -5,6 +5,7 @@ import { EditToolbar } from "./preview/edit-toolbar/edit-toolbar";
 import { WithExtensionContext } from "./core/ExtensionContext";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./theme";
+import { MetadataList } from "./metadata/metadata-list/metadata-list";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <WithExtensionContext>
             <EditToolbar />
             <PreviewCanvas />
+            <MetadataList />
           </WithExtensionContext>
         </WithEditorContext>
       </ThemeProvider>
