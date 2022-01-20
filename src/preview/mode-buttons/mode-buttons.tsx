@@ -20,7 +20,6 @@ export function ModeButtons() {
       switch (mode) {
         case EditorMode.Swap:
           field.image = await sdk.mediaLink.getImage();
-          sdk.mediaLink.getVideo();
 
           field.poi = {} as any;
           field.hotspots = [];
