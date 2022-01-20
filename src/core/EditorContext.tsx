@@ -1,6 +1,8 @@
-
-import React, { useEffect, useState } from "react";
-import { ShoppableImageHotspot, ShoppableImagePolygon } from "./ShoppableImageData";
+import React, { useState } from "react";
+import {
+  ShoppableImageHotspot,
+  ShoppableImagePolygon,
+} from "./ShoppableImageData";
 
 export enum EditorMode {
   Initial,
@@ -12,54 +14,60 @@ export enum EditorMode {
 
   // These modes don't exist, they trigger actions.
   Swap,
-  Delete
+  Delete,
 }
 
-export type MetadataSelection =
+export enum MetadataSelectionType {
+  Default,
+  ResizeX,
+  ResizeY,
+  Resize,
+}
+
+export type MetadataSelectionTarget =
   | ShoppableImageHotspot
-  | ShoppableImagePolygon
-  | undefined;
+  | ShoppableImagePolygon;
+
+export interface MetadataSelection {
+  target: MetadataSelectionTarget;
+  type: MetadataSelectionType;
+  lastPosition?: { x: number; y: number };
+  createdUndo?: boolean;
+}
 
 interface EditorState {
   mode: EditorMode;
   changeMode(mode: EditorMode): void;
-  selection: MetadataSelection,
-  setSelection(selection: MetadataSelection): void
+  selection: MetadataSelection | undefined;
+  setSelection(selection: MetadataSelection): void;
 }
 
 const dummySetter = () => {
   /* */
 };
 
-
 const defaultEditorState: EditorState = {
   mode: EditorMode.Initial,
   changeMode: dummySetter,
   selection: undefined,
-  setSelection: dummySetter
+  setSelection: dummySetter,
 };
 
 const EditorContext = React.createContext(defaultEditorState);
 
-export function WithEditorContext({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function WithEditorContext({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(defaultEditorState);
 
   state.changeMode = (mode: EditorMode) => {
     setState({ ...state, mode: mode, selection: undefined });
-  }
+  };
 
   state.setSelection = (selection: MetadataSelection) => {
-    setState({ ...state, selection })
-  }
+    setState({ ...state, selection });
+  };
 
   return (
-    <EditorContext.Provider value={state}>
-      {children}
-    </EditorContext.Provider>
+    <EditorContext.Provider value={state}>{children}</EditorContext.Provider>
   );
 }
 

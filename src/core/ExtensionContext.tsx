@@ -9,10 +9,15 @@ interface ExtensionState {
   sdk?: ContentFieldExtension;
   field?: ShoppableImageData;
   setField?: () => void;
+  setUndo?: () => void;
+  undo?: () => void;
+  clearUndo?: () => void;
+  undoHistory: ShoppableImageData[];
   sdkConnected: boolean;
 }
 
 const defaultExtensionState: ExtensionState = {
+  undoHistory: [],
   sdkConnected: false
 };
 
@@ -31,12 +36,32 @@ export function WithExtensionContext({
 
       const params = { ...sdk.params.installation, ...sdk.params.instance };
       const field = await sdk.field.getValue() as ShoppableImageData;
+      const undoHistory: ShoppableImageData[] = [];
 
-      const state: ExtensionState = { params, sdk, field, sdkConnected: true };
+      const state: ExtensionState = { params, sdk, field, undoHistory, sdkConnected: true };
 
       state.setField = () => {
         sdk.field.setValue(field);
         setState({ ...state });
+      }
+
+      state.setUndo = () => {
+        undoHistory.push(JSON.parse(JSON.stringify(field)));
+        setState({ ...state });
+      }
+
+      state.undo = () => {
+        const undo = undoHistory.pop();
+
+        if (undo) {
+          Object.assign(field, undo);
+          sdk.field.setValue(field);
+          setState({ ...state });
+        }
+      }
+
+      state.clearUndo = () => {
+        undoHistory.splice(0, undoHistory.length);
       }
 
       setState(state);

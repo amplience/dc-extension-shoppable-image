@@ -2,14 +2,40 @@ import "./edit-toolbar.css";
 import clsx from "clsx";
 import { EditorMode } from "../../core/EditorContext";
 import { useEditorContext } from "../../core/EditorContext";
+import { useExtensionContext } from "../../core/ExtensionContext";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Undo from "@mui/icons-material/Undo";
-import { Tooltip } from "@mui/material";
-import { GpsFixed, HighlightAlt } from "@mui/icons-material";
+import { Menu, MenuItem, Tooltip } from "@mui/material";
+import {
+  Category,
+  CircleOutlined,
+  CropSquareSharp,
+  GpsFixed,
+  HighlightAlt,
+} from "@mui/icons-material";
+import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
   const { mode, changeMode } = useEditorContext();
+  const { undoHistory, undo } = useExtensionContext();
+  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+  const open = anchorEl != null;
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const getShapeIcon = () => {
+    switch (mode) {
+      case EditorMode.EditorPolygonRect:
+        return <CropSquareSharp className="amp-edit-toolbar__modeicon" />;
+      case EditorMode.EditorPolygonCircle:
+        return <CircleOutlined className="amp-edit-toolbar__modeicon" />;
+      default:
+        return <Category className="amp-edit-toolbar__modeicon" />;
+    }
+  };
 
   return (
     <div
@@ -34,7 +60,9 @@ export function EditToolbar({ className }: { className?: string }) {
           <Tooltip title="Click to place a new Hotspot, or drag an existing one.">
             <Button
               variant="contained"
-              color={mode === EditorMode.EditorHotspot ? "primary" : "secondary"}
+              color={
+                mode === EditorMode.EditorHotspot ? "primary" : "secondary"
+              }
               onClick={() => changeMode(EditorMode.EditorHotspot)}
               disableElevation
             >
@@ -43,6 +71,41 @@ export function EditToolbar({ className }: { className?: string }) {
             </Button>
           </Tooltip>
 
+          <Tooltip title="Click to place a new Shape Hotspot, or drag an existing one.">
+            <Button
+              variant="contained"
+              color={
+                mode === EditorMode.EditorPolygonCircle ||
+                mode === EditorMode.EditorPolygonRect
+                  ? "primary"
+                  : "secondary"
+              }
+              onClick={(evt) => setAnchorEl(evt.currentTarget)}
+              disableElevation
+            >
+              {getShapeIcon()}
+              Shape Hotspot
+            </Button>
+          </Tooltip>
+          <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+            <MenuItem
+              onClick={() => {
+                changeMode(EditorMode.EditorPolygonRect);
+                handleClose();
+              }}
+            >
+              Rectangular Hotspot
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                changeMode(EditorMode.EditorPolygonCircle);
+                handleClose();
+              }}
+            >
+              Circular Hotspot
+            </MenuItem>
+          </Menu>
+
           <Divider orientation="vertical" variant="middle" flexItem />
 
           <Button
@@ -50,7 +113,12 @@ export function EditToolbar({ className }: { className?: string }) {
             color="secondary"
             className="amp-edit-toolbar__reset"
             disableElevation
-            disabled
+            disabled={undoHistory.length === 0}
+            onClick={() => {
+              if (undo) {
+                undo();
+              }
+            }}
           >
             <Undo />
           </Button>

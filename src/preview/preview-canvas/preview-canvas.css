@@ -68,4 +68,23 @@
 
 .amp-preview-canvas__hotspot--selected {
   background-color: rgba(0, 153, 255, 0.33);
+  z-index: 1;
+}
+
+.amp-preview-canvas__polygon {
+  position: absolute;
+  stroke: white;
+  stroke-dasharray: 2;
+  fill: rgba(0, 41, 131, 0.33);
+  transition: fill 0.33s, opacity 0.33s;
+}
+
+.amp-preview-canvas__polygon--inactive {
+  opacity: 0.33;
+}
+
+.amp-preview-canvas__polygon--selected {
+  fill: rgba(0, 153, 255, 0.33);
+  outline: 1px solid #039be5;
+  z-index: 1;
 }
