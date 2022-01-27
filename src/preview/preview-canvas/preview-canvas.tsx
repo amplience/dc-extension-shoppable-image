@@ -19,10 +19,13 @@ import {
 } from "../../core/EditorContext";
 import { pointsToSVGPath, Polygon, SVGPath } from "../polygon/polygon";
 import { PolygonHelper } from "../polygon/polygon-helper";
+import { useWindowContext } from "../../core/WindowContext";
+import { v4 as uuidv4 } from 'uuid';
 
 export function PreviewCanvas() {
   const { mode, selection, setSelection } = useEditorContext();
   const { sdk, field, setField, setUndo } = useExtensionContext();
+  const windowSize = useWindowContext();
   const [loaded, setLoaded] = useState(false);
   const [cursor, setCursor] = useState("default");
   const [imageSize, setImageSize] = useState({ w: -1, h: -1 });
@@ -33,7 +36,7 @@ export function PreviewCanvas() {
   const canvasRef = React.createRef<HTMLDivElement>();
 
   const targetHeight = 458;
-  const targetWidth = window.innerWidth;
+  const targetWidth = windowSize.w;
   const targetAspect = targetWidth / targetHeight;
 
   let polygons: SVGPath[] = [];
@@ -45,6 +48,7 @@ export function PreviewCanvas() {
     }
   };
 
+  let imageStyle: any = {};
   let canvas: JSX.Element | undefined;
   if (loaded) {
     const widthBounded = imageSize.w / imageSize.h > targetAspect;
@@ -56,6 +60,8 @@ export function PreviewCanvas() {
       ? targetWidth
       : (imageSize.w / imageSize.h) * targetHeight;
 
+    imageStyle = widthBounded ? { minWidth: '100%' } : { minHeight: '100%' };
+
     const unitScale = widthBounded ? targetHeight / targetWidth : 1;
 
     const aspect = {
@@ -65,7 +71,7 @@ export function PreviewCanvas() {
 
     const size = { x: canvasWidth, y: canvasHeight };
 
-    if (field && setField && field.polygons) {
+    if (field && field.polygons) {
       polygons = field.polygons.map((polygon) =>
         pointsToSVGPath(polygon.points)
       );
@@ -400,9 +406,9 @@ export function PreviewCanvas() {
 
             if (!moveHotspot) {
               moveHotspot = {
-                id: "id",
+                id: uuidv4(),
                 target: "target",
-                selector: "selector",
+                selector: ".selector",
                 points: {
                   x,
                   y,
@@ -452,9 +458,9 @@ export function PreviewCanvas() {
               }
 
               movePolygon = {
-                id: "id",
+                id: uuidv4(),
                 target: "target",
-                selector: "selector",
+                selector: ".selector",
                 points: points,
               };
 
@@ -564,6 +570,7 @@ export function PreviewCanvas() {
         className={clsx("amp-preview-canvas__image", {
           "amp-preview-canvas__image--hide": !loaded,
         })}
+        style={imageStyle}
         onLoad={() => {
           imageLoaded();
         }}

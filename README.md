@@ -1,70 +1,45 @@
-# Getting Started with Create React App
+[![Amplience Dynamic Content](media/header.png)](https://amplience.com/dynamic-content)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Dynamic Content Shoppable Image Extension](media/screenshot.png)
 
-## Available Scripts
+# Dynamic Content Shoppable Image Extension
 
-In the project directory, you can run:
+This extension allows users to define Focal Points and interactable Hotspots over an image, in format similar to what Content Hub provides, but with the data being stored on a content item.
 
-### `yarn start`
+If you want to get started after cloning this repo, remember to sync packages with `yarn install`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Partial for Shoppabble image Field and Configuration
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The shoppable image extension has a rather complicated structure for the field it writes, so it's recommended that you put the schema in a partial. You can find the full partial definition in `shoppable-image-partial.json` in the base of this repository.
 
-### `yarn test`
+To use the schema when imported as a partial, use this snippet:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```json
+{
+    "shoppableImage": {
+        "title": "Shoppable Image",
+        "description": "An image enriched with a focal point and hotspots.",
+        "allOf": [
+            { "$ref": "https://amplience.com/shoppable-image-partial#/definitions/shoppableImage" }
+        ]
+    }
+}
+```
 
-### `yarn build`
+## Visualization
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The webapp for the extension can also double as a standalone visualization for the shoppable image field. It will run in visualization mode if you provide `?vse={{vse.domain}}` as a query sting parameter, and will read back the field from the `shoppableImage` property of your content item. If you want to provide a different top level property, simply provide it in the query string like `fieldName=exampleImage`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The visualization uses the `dc-visualization-sdk` to update its preview as the field is being edited, so you'll be able to try hotspot interaction over your image as you add and move hotspots.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To add the visualization to your content type, just switch to the `Visualizations` tab, and add a visualization with the extension as the url, and the query string `?vse={{vse.domain}}`.
 
-### `yarn eject`
+## Development server
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Run `HTTPS=true yarn run start` for a dev server. Navigate to `https://localhost:3000/`. The app will automatically reload if you change any of the source files.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If you want to test on DC, you'll need to link an extension to that same localhost url. Keep in mind that you might run into a browser security issue when using SSL, so if you're having any issues visit the extension directly and accept any ssl warnings.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Build
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Run `yarn build`. The built extension will then be present in the `build/` directory, and you can upload it to any webserver.

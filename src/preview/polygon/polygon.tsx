@@ -1,6 +1,5 @@
-import {
-  ShoppableImagePoint
-} from "../../core/ShoppableImageData";
+import React, { SVGProps } from "react";
+import { ShoppableImagePoint } from "../../core/ShoppableImageData";
 
 export interface PolygonBounds {
   x: number;
@@ -59,10 +58,14 @@ export function Polygon({
   polygon,
   className,
   size,
+  polyRef,
+  svgProps,
 }: {
   polygon: SVGPath;
   size: { x: number; y: number };
   className?: string;
+  polyRef?: React.ForwardedRef<SVGSVGElement>;
+  svgProps?: SVGProps<unknown>;
 }) {
   //const parsed = pointsToSVGPath(polygon.points);
   return (
@@ -76,11 +79,26 @@ export function Polygon({
         left: polygon.bounds.x * size.x,
         top: polygon.bounds.y * size.y,
 
-        strokeWidth: (1.5/size.x)+'px',
-        strokeDasharray: (5/size.x)+'px',
+        strokeWidth: 1.5 / size.x + "px",
+        strokeDasharray: 5 / size.x + "px",
       }}
+      {...svgProps}
+      ref={polyRef}
     >
       <path d={polygon.path}></path>
     </svg>
   );
 }
+
+interface PolygonProps {
+  polygon: SVGPath;
+  size: { x: number; y: number };
+  className?: string;
+}
+
+export const PolygonForwardRef = React.forwardRef<
+  SVGSVGElement,
+  SVGProps<unknown> & PolygonProps
+>((props, ref) => {
+  return <Polygon {...props} svgProps={props} polyRef={ref} />;
+});

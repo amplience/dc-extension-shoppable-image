@@ -1,0 +1,117 @@
+{
+    "shoppableImage": {
+        "title": "Shoppable Image",
+        "description": "An image enriched with a focal point and hotspots that can be used for user interaction.",
+        "type": "object",
+        "properties": {
+            "image": {
+                "title": "Image",
+                "description": "The base image that the shoppable image elements are for.",
+                "allOf": [
+                    { "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/image-link" }
+                ]
+            },
+            "poi": {
+                "title": "Focal Point",
+                "description": "The focal point defined on the image. Coordinates are normalized 0-1 based on image size.",
+                "type": "object",
+                "properties": {
+                    "x": {
+                        "type": "number"
+                    },
+                    "y": {
+                        "type": "number"
+                    },
+                    "w": {
+                        "type": "number"
+                    },
+                    "h": {
+                        "type": "number"
+                    }
+                }
+            },
+            "hotspots": {
+                "title": "Hotspots",
+                "description": "Interactable hotspots defined on the image. Coordinates are normalized 0-1 based on image size.",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "points": {
+                            "title": "Point",
+                            "description": "The location of this hotspot on the image.",
+                            "type": "object",
+                            "properties": {
+                                "x": {
+                                    "type": "number"
+                                },
+                                "y": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "id": {
+                            "title": "ID",
+                            "description": "Unique idendifier for this hotspot.",
+                            "type": "string"
+                        },
+                        "selector": {
+                            "title": "Selector",
+                            "description": "The selector associated with this hotspot.",
+                            "type": "string"
+                        },
+                        "target": {
+                            "title": "Target",
+                            "description": "The target associated with this hotspot.",
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "polygons": {
+                "title": "Polygons",
+                "description": "Interactable polygonal regions defined on the image. Coordinates are normalized 0-1 based on image size.",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "points": {
+                            "title": "Polygon Points",
+                            "description": "The points that define this polygon. The polygon edge is drawn between all points in order, and closed at the end by drawing an edge from the last to the first point.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "x": {
+                                        "type": "number"
+                                    },
+                                    "y": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        },
+                        "id": {
+                            "title": "ID",
+                            "description": "Unique idendifier for this polygon.",
+                            "type": "string"
+                        },
+                        "selector": {
+                            "title": "Selector",
+                            "description": "The selector associated with this polygon.",
+                            "type": "string"
+                        },
+                        "target": {
+                            "title": "Target",
+                            "description": "The target associated with this polygon.",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "ui:extension": {
+            "name": "shoppable-image"
+        }
+    }
+}
