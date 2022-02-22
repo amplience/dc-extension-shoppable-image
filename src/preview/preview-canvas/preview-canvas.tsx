@@ -375,6 +375,8 @@ export function PreviewCanvas() {
           const hover = getClickedHotspot(x, y);
           if (hover) {
             targetMouse = "grab";
+          } else {
+            targetMouse = "copy";
           }
         }
       }
@@ -395,6 +397,7 @@ export function PreviewCanvas() {
           case EditorMode.EditorPoi:
             // POI does not need selection.
             if (setUndo) setUndo();
+            onDrag(evt);
             break;
           case EditorMode.EditorHotspot:
             if (!field.hotspots) {
@@ -528,7 +531,12 @@ export function PreviewCanvas() {
                   mode !== EditorMode.EditorHotspot,
               })}
               style={scaleHotspot(hotspot)}
-            ></div>
+            >
+              <svg viewBox="0 0 20 20" className={clsx("amp-preview-canvas__hotspotplus")}>
+                <rect x="9.15" y="3.5" width="1.7" height="13"></rect>
+                <rect y="9.15" x="3.5" width="13" height="1.7"></rect>
+              </svg>
+            </div>
           ))}
 
         {field &&

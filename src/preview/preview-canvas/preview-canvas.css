@@ -50,7 +50,7 @@
 
 .amp-preview-canvas__hotspot {
   position: absolute;
-  border: 1px dashed white;
+  border: 1px solid white;
   background-color: rgba(0, 41, 131, 0.33);
   transition: background-color 0.33s, opacity 0.33s;
 
@@ -60,6 +60,12 @@
   margin: -20px;
 
   border-radius: 50%;
+}
+
+.amp-preview-canvas__hotspotplus {
+  width: 40px;
+  height: 40px;
+  fill: white;
 }
 
 .amp-preview-canvas__hotspot--inactive {
