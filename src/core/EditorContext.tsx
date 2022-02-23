@@ -31,6 +31,7 @@ export type MetadataSelectionTarget =
 export interface MetadataSelection {
   target: MetadataSelectionTarget;
   type: MetadataSelectionType;
+  resizeAnchor?: { x: number; y: number };
   lastPosition?: { x: number; y: number };
   createdUndo?: boolean;
 }

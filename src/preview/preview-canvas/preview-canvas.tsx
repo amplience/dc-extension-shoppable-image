@@ -115,16 +115,25 @@ export function PreviewCanvas() {
       return poi;
     };
 
+    type ResizeAnchor = { x: number, y: number };
+
+    interface ClickedPolygonResult {
+      polygon?: ShoppableImagePolygon | undefined;
+      type: MetadataSelectionType;
+      anchor?: ResizeAnchor;
+    }
+
     const getClickedPolygon = (
       x: number,
       y: number
-    ): [ShoppableImagePolygon | undefined, MetadataSelectionType] => {
+    ): ClickedPolygonResult => {
       // Step 1: Find the polygon with the lowest distance.
       // This is used to select polygons when the mouse overlaps multiple.
 
       let bestIndex = -1;
       let bestDistanceSquared = Infinity;
       let bestType = MetadataSelectionType.Default;
+      let anchor: ResizeAnchor | undefined;
 
       const resizeMarginX = 0.01 * aspect.x;
       const resizeMarginY = 0.01 * aspect.y;
@@ -134,20 +143,38 @@ export function PreviewCanvas() {
         for (const polygon of polygons) {
           // First, does the polygon overlap the mouse?
           const bounds = polygon.bounds;
+          const startX = bounds.x - resizeMarginX;
+          const startY = bounds.y - resizeMarginY;
           const endX = bounds.x + bounds.w + resizeMarginX;
           const endY = bounds.y + bounds.h + resizeMarginY;
-          if (x >= bounds.x && y >= bounds.y && x <= endX && y <= endY) {
+          if (x >= startX && y >= startY && x <= endX && y <= endY) {
             let type = MetadataSelectionType.Default;
 
+            // 1 indicates positive resize, 0 negative.
+            let resizeX: number | undefined;
+            let resizeY: number | undefined;
+
             if (x > bounds.x + bounds.w - resizeMarginX) {
-              type = MetadataSelectionType.ResizeX;
+              resizeX = 1;
+            } else if (x < bounds.x + resizeMarginX) {
+              resizeX = 0;
             }
 
             if (y > bounds.y + bounds.h - resizeMarginY) {
-              type =
-                type === MetadataSelectionType.ResizeX
-                  ? MetadataSelectionType.Resize
-                  : MetadataSelectionType.ResizeY;
+              resizeY = 1;
+            } else if (y < bounds.y + resizeMarginY) {
+              resizeY = 0;
+            }
+
+            if (resizeX !== undefined) {
+              type = (resizeY !== undefined) ? MetadataSelectionType.Resize : MetadataSelectionType.ResizeX;
+
+              // 0 indicates anchor at x,y. 1 indicates anchor at width,height.
+              anchor = { x: 1 - resizeX, y: (1 - (resizeY || 0)) };
+            } else if (resizeY !== undefined) {
+              type = MetadataSelectionType.ResizeY;
+
+              anchor = { x: 0, y: 1 - resizeY };
             }
 
             const center = {
@@ -177,9 +204,9 @@ export function PreviewCanvas() {
       }
 
       if (field && field.polygons && bestIndex != null) {
-        return [field.polygons[bestIndex], bestType];
+        return { polygon: field.polygons[bestIndex], type: bestType, anchor };
       } else {
-        return [undefined, MetadataSelectionType.Default];
+        return { polygon: undefined, type: MetadataSelectionType.Default, anchor };
       }
     };
 
@@ -296,25 +323,44 @@ export function PreviewCanvas() {
                   const minWidth = 0.05 * aspect.x;
                   const minHeight = 0.05 * aspect.y;
 
+                  const anchor = selection.resizeAnchor;
+
+                  const anchorEdgeX = cPoly.bounds.x + (anchor?.x || 0) * cPoly.bounds.w;
+                  const anchorEdgeY = cPoly.bounds.y + (anchor?.y || 0) * cPoly.bounds.h;
+
+                  // The distance from mouse is flipped with the anchor at bottom right.
+                  const mulX = ((anchor?.x || 0) - 0.5) * -2;
+                  const mulY = ((anchor?.y || 0) - 0.5) * -2;
+
                   const newWidth = Math.max(
                     minWidth,
-                    resizeX ? x - cPoly.bounds.x : cPoly.bounds.w
+                    resizeX ? (x - anchorEdgeX) * mulX : cPoly.bounds.w
                   );
 
                   const newHeight = Math.max(
                     minHeight,
-                    resizeY ? y - cPoly.bounds.y : cPoly.bounds.h
+                    resizeY ? (y - anchorEdgeY) * mulY : cPoly.bounds.h
                   );
 
                   const ratioX = newWidth / cPoly.bounds.w;
                   const ratioY = newHeight / cPoly.bounds.h;
 
+                  let offset: { x: number, y: number };
+                  if (selection.resizeAnchor) {
+                    offset = { 
+                      x: ((cPoly.bounds.w - newWidth) * selection.resizeAnchor.x),
+                      y: ((cPoly.bounds.h - newHeight) * selection.resizeAnchor.y)
+                    };
+                  } else {
+                    offset = { x: 0, y: 0 };
+                  }
+
                   markUndo(ratioX !== 1 || ratioY !== 1);
 
                   polygon.points = polygon.points.map((point) => {
                     return {
-                      x: (point.x - cPoly.bounds.x) * ratioX + cPoly.bounds.x,
-                      y: (point.y - cPoly.bounds.y) * ratioY + cPoly.bounds.y,
+                      x: (point.x - cPoly.bounds.x) * ratioX + cPoly.bounds.x + offset.x,
+                      y: (point.y - cPoly.bounds.y) * ratioY + cPoly.bounds.y + offset.y,
                     };
                   });
                 }
@@ -329,16 +375,33 @@ export function PreviewCanvas() {
       }
     };
 
+    const getMouseType = (type: MetadataSelectionType, anchor?: ResizeAnchor): string => {
+      switch (type) {
+        case MetadataSelectionType.Default:
+          return "grab";
+        case MetadataSelectionType.ResizeX:
+          return "ew-resize";
+        case MetadataSelectionType.ResizeY:
+          return "ns-resize";
+        case MetadataSelectionType.Resize:
+          return (anchor && anchor.x !== anchor.y) ? "nesw-resize" : "nwse-resize";
+      }
+      return "default";
+    }
+
     const mouseMove = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       let targetMouse = "default";
 
       if (mouseState.isMouseDown) {
         if (
           selection &&
-          selection.target &&
-          selection.type === MetadataSelectionType.Default
+          selection.target
         ) {
-          targetMouse = "grabbing";
+          if (selection.type === MetadataSelectionType.Default) {
+            targetMouse = "grabbing";
+          } else {
+            targetMouse = getMouseType(selection.type, selection.resizeAnchor);
+          }
         }
 
         onDrag(evt);
@@ -351,23 +414,10 @@ export function PreviewCanvas() {
           mode === EditorMode.EditorPolygonCircle ||
           mode === EditorMode.EditorPolygonRect
         ) {
-          const [hover, mode] = getClickedPolygon(x, y);
+          const {polygon, type, anchor} = getClickedPolygon(x, y);
 
-          if (hover) {
-            switch (mode) {
-              case MetadataSelectionType.Default:
-                targetMouse = "grab";
-                break;
-              case MetadataSelectionType.ResizeX:
-                targetMouse = "ew-resize";
-                break;
-              case MetadataSelectionType.ResizeY:
-                targetMouse = "ns-resize";
-                break;
-              case MetadataSelectionType.Resize:
-                targetMouse = "nwse-resize";
-                break;
-            }
+          if (polygon) {
+            targetMouse = getMouseType(type, anchor);
           } else {
             targetMouse = "copy";
           }
@@ -439,10 +489,10 @@ export function PreviewCanvas() {
               field.polygons = [];
             }
 
-            let [movePolygon, type] = getClickedPolygon(x, y);
-            const isPolyNew = !movePolygon;
+            let {polygon, type, anchor} = getClickedPolygon(x, y);
+            const isPolyNew = !polygon;
 
-            if (!movePolygon) {
+            if (!polygon) {
               let points: ShoppableImagePoint[];
               if (mode === EditorMode.EditorPolygonRect) {
                 points = PolygonHelper.box(
@@ -460,7 +510,7 @@ export function PreviewCanvas() {
                 );
               }
 
-              movePolygon = {
+              polygon = {
                 id: uuidv4(),
                 target: "target",
                 selector: ".selector",
@@ -468,7 +518,7 @@ export function PreviewCanvas() {
               };
 
               if (setUndo) setUndo();
-              field.polygons.push(movePolygon);
+              field.polygons.push(polygon);
 
               type = MetadataSelectionType.Resize;
             }
@@ -479,9 +529,10 @@ export function PreviewCanvas() {
             });
 
             setSelection({
-              target: movePolygon,
+              target: polygon,
               type: type,
               lastPosition: { x, y },
+              resizeAnchor: anchor,
               createdUndo: isPolyNew,
             });
             break;
