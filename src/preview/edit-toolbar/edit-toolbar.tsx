@@ -26,7 +26,7 @@ export function EditToolbar({ className }: { className?: string }) {
     setAnchorEl(null);
   };
 
-  const getShapeIcon = () => {
+  const getPolygonIcon = () => {
     switch (mode) {
       case EditorMode.EditorPolygonRect:
         return <CropSquareSharp className="amp-edit-toolbar__modeicon" />;
@@ -71,20 +71,24 @@ export function EditToolbar({ className }: { className?: string }) {
             </Button>
           </Tooltip>
 
-          <Tooltip title="Click to place a new Shape Hotspot, or drag an existing one.">
+          <Tooltip title="Click to place a new Polygon Hotspot, or drag an existing one.">
             <Button
               variant="contained"
               color={
+                mode === EditorMode.EditorGrab ||
                 mode === EditorMode.EditorPolygonCircle ||
                 mode === EditorMode.EditorPolygonRect
                   ? "primary"
                   : "secondary"
               }
-              onClick={(evt) => setAnchorEl(evt.currentTarget)}
+              onClick={(evt) => {
+                changeMode(EditorMode.EditorGrab);
+                setAnchorEl(evt.currentTarget);
+              }}
               disableElevation
             >
-              {getShapeIcon()}
-              Shape Hotspot
+              {getPolygonIcon()}
+              Polygon Hotspot
             </Button>
           </Tooltip>
           <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>

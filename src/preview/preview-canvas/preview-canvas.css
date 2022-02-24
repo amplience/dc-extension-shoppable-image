@@ -26,7 +26,7 @@
 .amp-preview-canvas__focalpoint {
   position: absolute;
   border: 1px dashed rgba(255, 255, 255, 0.75);;
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 41, 131, 0.33);
   transition: opacity 0.33s;
   display: flex;
   justify-content: center;

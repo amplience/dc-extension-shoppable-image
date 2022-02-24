@@ -8,7 +8,7 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { EditorMode, MetadataSelectionType, useEditorContext } from "../../core/EditorContext";
+import { EditorMode, MetadataSelectionMode, MetadataSelectionType, useEditorContext } from "../../core/EditorContext";
 import { useExtensionContext } from "../../core/ExtensionContext";
 
 export function MetadataList({ className }: { className?: string }) {
@@ -83,7 +83,7 @@ export function MetadataList({ className }: { className?: string }) {
               <TableRow
                 key={index}
                 selected={selection && selection.target === hotspot}
-                onClick={() => setSelection({ target: hotspot, type: MetadataSelectionType.Default })}
+                onClick={() => setSelection({ target: hotspot, mode: MetadataSelectionMode.Hotspot, type: MetadataSelectionType.Default })}
               >
                 <TableCell component="th">Hotspot {index + 1}</TableCell>
                 <TableCell sx={{ paddingTop: "2px", paddingBottom: "2px" }}>
@@ -129,7 +129,7 @@ export function MetadataList({ className }: { className?: string }) {
               <TableRow
                 key={index}
                 selected={selection && selection.target === polygon}
-                onClick={() => setSelection({ target: polygon, type: MetadataSelectionType.Default })}
+                onClick={() => setSelection({ target: polygon, mode: MetadataSelectionMode.Polygon, type: MetadataSelectionType.Default })}
               >
                 <TableCell component="th">Polygon {index + 1}</TableCell>
                 <TableCell sx={{ paddingTop: "2px", paddingBottom: "2px" }}>

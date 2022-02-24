@@ -8,6 +8,8 @@ export enum EditorMode {
   Initial,
 
   EditorPoi,
+
+  EditorGrab,
   EditorHotspot,
   EditorPolygonRect,
   EditorPolygonCircle,
@@ -24,12 +26,18 @@ export enum MetadataSelectionType {
   Resize,
 }
 
+export enum MetadataSelectionMode {
+  Hotspot,
+  Polygon
+}
+
 export type MetadataSelectionTarget =
   | ShoppableImageHotspot
   | ShoppableImagePolygon;
 
 export interface MetadataSelection {
   target: MetadataSelectionTarget;
+  mode: MetadataSelectionMode;
   type: MetadataSelectionType;
   resizeAnchor?: { x: number; y: number };
   lastPosition?: { x: number; y: number };
@@ -64,6 +72,17 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
   };
 
   state.setSelection = (selection: MetadataSelection) => {
+    if (state.mode === EditorMode.EditorPoi) {
+      switch (selection.mode) {
+        case MetadataSelectionMode.Hotspot:
+          state.mode = EditorMode.EditorHotspot;
+          break;
+        case MetadataSelectionMode.Polygon:
+          state.mode = EditorMode.EditorGrab;
+          break;
+      }
+    }
+
     setState({ ...state, selection });
   };
 
