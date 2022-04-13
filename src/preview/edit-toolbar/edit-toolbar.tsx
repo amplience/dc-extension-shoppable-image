@@ -8,11 +8,11 @@ import Divider from "@mui/material/Divider";
 import Undo from "@mui/icons-material/Undo";
 import { Menu, MenuItem, Tooltip } from "@mui/material";
 import {
-  Category,
   CircleOutlined,
   CropSquareSharp,
   GpsFixed,
   HighlightAlt,
+  HighlightOff
 } from "@mui/icons-material";
 import React from "react";
 
@@ -33,7 +33,7 @@ export function EditToolbar({ className }: { className?: string }) {
       case EditorMode.EditorPolygonCircle:
         return <CircleOutlined className="amp-edit-toolbar__modeicon" />;
       default:
-        return <Category className="amp-edit-toolbar__modeicon" />;
+        return <HighlightAlt className="amp-edit-toolbar__modeicon" />;
     }
   };
 
@@ -66,7 +66,7 @@ export function EditToolbar({ className }: { className?: string }) {
               onClick={() => changeMode(EditorMode.EditorHotspot)}
               disableElevation
             >
-              <HighlightAlt className="amp-edit-toolbar__modeicon" />
+              <HighlightOff className="amp-edit-toolbar__modeicon amp-edit-toolbar__rot45" />
               Hotspots
             </Button>
           </Tooltip>
