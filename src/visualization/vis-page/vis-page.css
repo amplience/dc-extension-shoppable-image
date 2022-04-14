@@ -7,7 +7,6 @@
   position: relative;
 }
 
-
 .amp-vis-page__image {
   max-width: 100%;
   max-height: 100%;
@@ -51,7 +50,7 @@
 
 .amp-vis-page__hotspot {
   position: absolute;
-  border: 1px dashed white;
+  border: 1px solid white;
   background-color: rgba(0, 41, 131, 0.33);
   transition: background-color 0.33s, opacity 0.33s;
 
@@ -61,6 +60,12 @@
   margin: -20px;
 
   border-radius: 50%;
+}
+
+.amp-vis-page__hotspotplus {
+  width: 40px;
+  height: 40px;
+  fill: white;
 }
 
 .amp-vis-page__hotspot--hidden {

@@ -18,6 +18,7 @@ function App() {
   const fieldName = params.get("fieldName") || "shoppableImage";
 
   const [hotspotHide, setHotspotHide] = useState(false);
+  const [scaleToFit, setScaleToFit] = useState(false);
 
   return (
     <div className="amp-app">
@@ -26,7 +27,7 @@ function App() {
           {vse != null ? (
             <WithVisualizationContext fieldName={fieldName}>
               <div className="amp-app-vis-toolbar">
-                <FormGroup>
+                <FormGroup className="amp-app-vis-toolbar__group">
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -36,9 +37,18 @@ function App() {
                     }
                     label="Hide Hotspots"
                   />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={scaleToFit}
+                        onChange={(evt) => setScaleToFit(evt.target.checked)}
+                      />
+                    }
+                    label="Scale to Fit"
+                  />
                 </FormGroup>
               </div>
-              <VisPage hotspotHide={hotspotHide} vse={vse} />
+              <VisPage hotspotHide={hotspotHide} scaleToFit={scaleToFit} vse={vse} />
             </WithVisualizationContext>
           ) : (
             <WithEditorContext>

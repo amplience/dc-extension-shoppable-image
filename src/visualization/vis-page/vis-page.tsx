@@ -16,7 +16,7 @@ import {
 import { useVisualizationContext } from "../visualization-context";
 import { useWindowContext } from "../../core/WindowContext";
 
-export function VisPage({ vse, hotspotHide }: { vse: string, hotspotHide: boolean }) {
+export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspotHide: boolean, scaleToFit: boolean }) {
   const { field } = useVisualizationContext();
   const windowSize = useWindowContext();
   const [loaded, setLoaded] = useState(false);
@@ -55,14 +55,51 @@ export function VisPage({ vse, hotspotHide }: { vse: string, hotspotHide: boolea
   if (field && loaded) {
     const widthBounded = imageSize.w / imageSize.h > targetAspect;
 
-    const canvasHeight = widthBounded
-      ? (imageSize.h / imageSize.w) * targetWidth
-      : targetHeight;
-    const canvasWidth = widthBounded
-      ? targetWidth
-      : (imageSize.w / imageSize.h) * targetHeight;
+    let canvasHeight: number, canvasWidth: number;
 
-    imageStyle = widthBounded ? { minWidth: "100%" } : { minHeight: "100%" };
+    let offsetTransform = '';
+
+    if (scaleToFit) {
+      // Scale image to canvas. Focal point is not used.
+      canvasHeight = widthBounded
+        ? (imageSize.h / imageSize.w) * targetWidth
+        : targetHeight;
+      canvasWidth = widthBounded
+        ? targetWidth
+        : (imageSize.w / imageSize.h) * targetHeight;
+
+      imageStyle = widthBounded ? { minWidth: "100%" } : { minHeight: "100%" };
+    } else {
+      // Fill image to canvas, centering on focal point. If the width is the bounding dimension, let it overflow, and vice versa.
+      canvasHeight = widthBounded
+        ? targetHeight
+        : (imageSize.h / imageSize.w) * targetWidth;
+      canvasWidth = widthBounded
+        ? (imageSize.w / imageSize.h) * targetHeight
+        : targetWidth;
+
+      // Determine a position offset based on the focal point, if present.
+      if (field.poi) {
+        const poiX = (field.poi.x + field.poi.w / 2 - 0.5) * canvasWidth;
+        const poiY = (field.poi.y + field.poi.h / 2 - 0.5) * canvasHeight;
+
+        if (widthBounded) {
+          // Width overflow, center on x.
+          const maxDist = (canvasWidth - targetWidth) / 2;
+
+          offsetTransform = `translate(${Math.min(maxDist, Math.max(-poiX, -maxDist))}px, 0)`;
+        } else {
+          // Height overflow, center on y.
+          const maxDist = (canvasHeight - targetHeight) / 2;
+
+          offsetTransform = `translate(0, ${Math.min(maxDist, Math.max(-poiY, -maxDist))}px)`;
+        }
+      }
+
+      imageStyle = widthBounded ? { height: "100%", maxWidth: "none" } : { width: "100%", maxHeight: "none" };
+    }
+
+    imageStyle.transform = offsetTransform;
 
     const size = { x: canvasWidth, y: canvasHeight };
 
@@ -90,6 +127,7 @@ export function VisPage({ vse, hotspotHide }: { vse: string, hotspotHide: boolea
         style={{
           width: canvasWidth + "px",
           height: canvasHeight + "px",
+          transform: offsetTransform
         }}
         ref={canvasRef}
       >
@@ -133,7 +171,15 @@ export function VisPage({ vse, hotspotHide }: { vse: string, hotspotHide: boolea
                   "amp-vis-page__hotspot--hidden": hidden,
                 })}
                 style={scaleHotspot(hotspot)}
-              ></div>
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  className={clsx("amp-vis-page__hotspotplus")}
+                >
+                  <rect x="9.15" y="3.5" width="1.7" height="13"></rect>
+                  <rect y="9.15" x="3.5" width="13" height="1.7"></rect>
+                </svg>
+              </div>
             </Tooltip>
           ))}
       </div>
