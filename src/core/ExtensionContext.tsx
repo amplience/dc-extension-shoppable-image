@@ -11,13 +11,16 @@ interface ExtensionState {
   setField?: () => void;
   setUndo?: () => void;
   undo?: () => void;
+  redo?: () => void;
   clearUndo?: () => void;
   undoHistory: ShoppableImageData[];
+  redoHistory: ShoppableImageData[];
   sdkConnected: boolean;
 }
 
 const defaultExtensionState: ExtensionState = {
   undoHistory: [],
+  redoHistory: [],
   sdkConnected: false
 };
 
@@ -37,8 +40,9 @@ export function WithExtensionContext({
       const params = { ...sdk.params.installation, ...sdk.params.instance };
       const field = await sdk.field.getValue() as ShoppableImageData;
       const undoHistory: ShoppableImageData[] = [];
+      const redoHistory: ShoppableImageData[] = [];
 
-      const state: ExtensionState = { params, sdk, field, undoHistory, sdkConnected: true };
+      const state: ExtensionState = { params, sdk, field, undoHistory, redoHistory, sdkConnected: true };
 
       state.setField = () => {
         sdk.field.setValue(field);
@@ -46,6 +50,7 @@ export function WithExtensionContext({
       }
 
       state.setUndo = () => {
+        redoHistory.splice(0, redoHistory.length);
         undoHistory.push(JSON.parse(JSON.stringify(field)));
         setState({ ...state });
       }
@@ -54,13 +59,26 @@ export function WithExtensionContext({
         const undo = undoHistory.pop();
 
         if (undo) {
+          redoHistory.push(JSON.parse(JSON.stringify(field)));
           Object.assign(field, undo);
           sdk.field.setValue(field);
           setState({ ...state });
         }
       }
 
+      state.redo = () => {
+        const redo = redoHistory.pop();
+
+        if (redo) {
+          undoHistory.push(JSON.parse(JSON.stringify(field)));
+          Object.assign(field, redo);
+          sdk.field.setValue(field);
+          setState({ ...state });
+        }
+      }
+
       state.clearUndo = () => {
+        redoHistory.splice(0, redoHistory.length);
         undoHistory.splice(0, undoHistory.length);
       }
 

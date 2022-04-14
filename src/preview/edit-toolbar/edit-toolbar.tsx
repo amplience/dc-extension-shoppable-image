@@ -6,6 +6,7 @@ import { useExtensionContext } from "../../core/ExtensionContext";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Undo from "@mui/icons-material/Undo";
+import Redo from "@mui/icons-material/Redo";
 import { Menu, MenuItem, Tooltip } from "@mui/material";
 import {
   CircleOutlined,
@@ -18,7 +19,7 @@ import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
   const { mode, changeMode } = useEditorContext();
-  const { undoHistory, undo } = useExtensionContext();
+  const { undoHistory, undo, redoHistory, redo } = useExtensionContext();
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const open = anchorEl != null;
 
@@ -125,6 +126,21 @@ export function EditToolbar({ className }: { className?: string }) {
             }}
           >
             <Undo />
+          </Button>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            className="amp-edit-toolbar__reset"
+            disableElevation
+            disabled={redoHistory.length === 0}
+            onClick={() => {
+              if (redo) {
+                redo();
+              }
+            }}
+          >
+            <Redo />
           </Button>
         </div>
       </div>
