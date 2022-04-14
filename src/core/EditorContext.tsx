@@ -48,7 +48,7 @@ interface EditorState {
   mode: EditorMode;
   changeMode(mode: EditorMode): void;
   selection: MetadataSelection | undefined;
-  setSelection(selection: MetadataSelection): void;
+  setSelection(selection: MetadataSelection | undefined): void;
 }
 
 const dummySetter = () => {
@@ -71,8 +71,8 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
     setState({ ...state, mode: mode, selection: undefined });
   };
 
-  state.setSelection = (selection: MetadataSelection) => {
-    if (state.mode === EditorMode.EditorPoi) {
+  state.setSelection = (selection: MetadataSelection | undefined) => {
+    if (state.mode === EditorMode.EditorPoi && selection) {
       switch (selection.mode) {
         case MetadataSelectionMode.Hotspot:
           state.mode = EditorMode.EditorHotspot;

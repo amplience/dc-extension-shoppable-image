@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { EditorMode, MetadataSelectionMode, MetadataSelectionType, useEditorContext } from "../../core/EditorContext";
 import { useExtensionContext } from "../../core/ExtensionContext";
+import { KeyboardShortcuts } from "../../core/KeyboardShortcuts";
+import { ShoppableImageHotspot, ShoppableImagePolygon } from "../../core/ShoppableImageData";
 
 export function MetadataList({ className }: { className?: string }) {
   const { field, setField, setUndo } = useExtensionContext();
@@ -28,7 +30,7 @@ export function MetadataList({ className }: { className?: string }) {
   };
 
   const deletePoi = () => {
-    if (field && setField && setUndo) {
+    if (field && setField && setUndo && field.poi && field.poi.x != null) {
       setUndo();
       field.poi = { } as any;
       setField();
@@ -40,6 +42,7 @@ export function MetadataList({ className }: { className?: string }) {
       setUndo();
       field.hotspots.splice(index, 1);
       setField();
+      setSelection(undefined);
     }
   }
 
@@ -48,8 +51,26 @@ export function MetadataList({ className }: { className?: string }) {
       setUndo();
       field.polygons.splice(index, 1);
       setField();
+      setSelection(undefined);
     }
   }
+
+  KeyboardShortcuts.bindDeleteMethod(() => {
+    if (field) {
+      if (selection) {
+        if (selection.mode === MetadataSelectionMode.Hotspot && field.hotspots) {
+          deleteHotspot(field.hotspots.indexOf(selection.target as ShoppableImageHotspot));
+        }
+  
+        if (selection.mode === MetadataSelectionMode.Polygon && field.polygons) {
+          deletePolygon(field.polygons.indexOf(selection.target as ShoppableImagePolygon));
+        }
+      } else if (mode === EditorMode.EditorPoi) {
+        deletePoi();
+      }
+    }
+
+  });
 
   return (
     <TableContainer>

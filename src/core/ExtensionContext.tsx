@@ -2,6 +2,7 @@ import { ContentFieldExtension } from "dc-extensions-sdk";
 import React, { useEffect, useState } from "react";
 import { AutoResizer } from "./AutoResizer";
 import { getSdk } from "./ExtensionSdk";
+import { KeyboardShortcuts } from "./KeyboardShortcuts";
 import { ShoppableImageData } from "./ShoppableImageData";
 
 interface ExtensionState {
@@ -81,6 +82,8 @@ export function WithExtensionContext({
         redoHistory.splice(0, redoHistory.length);
         undoHistory.splice(0, undoHistory.length);
       }
+
+      KeyboardShortcuts.bindUndoMethods(state.undo, state.redo);
 
       setState(state);
     }).catch((e) => {
