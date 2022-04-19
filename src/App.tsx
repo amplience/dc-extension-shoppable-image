@@ -27,7 +27,7 @@ function App() {
           {vse != null ? (
             <WithVisualizationContext fieldName={fieldName}>
               <div className="amp-app-vis-toolbar">
-                <FormGroup className="amp-app-vis-toolbar__group">
+                <FormGroup className="amp-app-vis-toolbar_">
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -51,13 +51,13 @@ function App() {
               <VisPage hotspotHide={hotspotHide} scaleToFit={scaleToFit} vse={vse} />
             </WithVisualizationContext>
           ) : (
-            <WithEditorContext>
-              <WithExtensionContext>
+            <WithExtensionContext>
+              <WithEditorContext>
                 <EditToolbar />
                 <PreviewCanvas />
                 <MetadataList />
-              </WithExtensionContext>
-            </WithEditorContext>
+              </WithEditorContext>
+            </WithExtensionContext>
           )}
         </WithWindowContext>
       </ThemeProvider>

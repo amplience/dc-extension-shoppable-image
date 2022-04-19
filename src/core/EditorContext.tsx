@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useExtensionContext } from "./ExtensionContext";
 import {
   ShoppableImageHotspot,
   ShoppableImagePolygon,
@@ -66,6 +67,7 @@ const EditorContext = React.createContext(defaultEditorState);
 
 export function WithEditorContext({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(defaultEditorState);
+  const { field } = useExtensionContext();
 
   state.changeMode = (mode: EditorMode) => {
     setState({ ...state, mode: mode, selection: undefined });
@@ -85,6 +87,38 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
 
     setState({ ...state, selection });
   };
+
+  const validateSelection = () => {
+    if (state.selection && field) {
+      if (state.selection.mode === MetadataSelectionMode.Hotspot) {
+        const index = field.hotspots ? field.hotspots.findIndex(x => x.id === (state.selection as MetadataSelection).target.id) : -1;
+
+        if (index === -1) {
+          state.setSelection(undefined);
+        } else if (field.hotspots && field.hotspots[index] !== (state.selection as MetadataSelection).target) {
+          // Might need to repoint at new object.
+          state.setSelection({
+            ...state.selection,
+            target: field.hotspots[index]
+          });
+        }
+      } else if (state.selection.mode === MetadataSelectionMode.Polygon) {
+        const index = field.polygons ? field.polygons.findIndex(x => x.id === (state.selection as MetadataSelection).target.id) : -1;
+
+        if (index === -1) {
+          state.setSelection(undefined);
+        } else if (field.polygons && field.polygons[index] !== (state.selection as MetadataSelection).target) {
+          // Might need to repoint at new object.
+          state.setSelection({
+            ...state.selection,
+            target: field.polygons[index]
+          });
+        }
+      }
+    }
+  }
+
+  validateSelection();
 
   return (
     <EditorContext.Provider value={state}>{children}</EditorContext.Provider>

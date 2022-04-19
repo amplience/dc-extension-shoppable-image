@@ -116,8 +116,6 @@ export class KeyboardShortcuts {
   }
 
   keyDown(event: KeyboardEvent) {
-    console.log(document.activeElement);
-
     if (document.activeElement && document.activeElement.tagName === 'INPUT') {
       return;
     }
