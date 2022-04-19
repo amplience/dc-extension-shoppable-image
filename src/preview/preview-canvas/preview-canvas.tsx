@@ -633,7 +633,7 @@ export function PreviewCanvas() {
           field.hotspots &&
           field.hotspots.map((hotspot, index) => (
             <div
-              key={index}
+              key={hotspot.id}
               className={clsx("amp-preview-canvas__hotspot", {
                 "amp-preview-canvas__hotspot--selected":
                   selection && selection.target === hotspot,
