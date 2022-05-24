@@ -26,6 +26,39 @@ To use the schema when imported as a partial, use this snippet:
 }
 ```
 
+## Register Extension
+
+This extension needs to be [registered](https://amplience.com/docs/development/registeringextensions.html) against a Hub with in the Dynamic Content application (Developer -> Extensions), for it to load within that Hub.
+
+### Setup
+
+![Setup](media/setup.png)
+
+* Category: Content Field
+* Label: Shoppable Image _(this will appear as the tab title in the Dashboard)_
+* Name: shoppable-image _(needs to be unique with the Hub)_
+* URL: [https://shoppable-image.extensions.content.amplience.net](https://shoppable-image.extensions.content.amplience.net)
+* Description: Shoppable Image Extension _(can be left blank, if you wish)_
+
+To use the application the following permissions must be enabled:
+
+Note:
+You can use our deployed version of this extension (builds from the "production" branch) -
+
+[https://shoppable-image.extensions.content.amplience.net](https://shoppable-image.extensions.content.amplience.net)
+
+_As this is an open source project you're welcome to host your own "fork" of this project. You can use any standard static hosting service (Netlify, Amplify, Vercel, etc.) if you wish._
+
+#### Permissions
+
+No additional permissions are required.
+
+## Output Data Format & Usage
+
+The shoppable image extension creates a simple format that you can ingest in your site to use or represent hotspots and the point of interest however you want.
+
+For information on the format structure, and how you might use it in your own renderer or video player, see [this documentation.](docs/FORMAT-USAGE.md)
+
 ## Visualization
 
 The webapp for the extension can also double as a standalone visualization for the shoppable image field. It will run in visualization mode if you provide `?vse={{vse.domain}}` as a query sting parameter, and will read back the field from the `shoppableImage` property of your content item. If you want to provide a different top level property, simply provide it in the query string like `fieldName=exampleImage`.
