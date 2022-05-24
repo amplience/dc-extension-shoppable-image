@@ -4,7 +4,7 @@
 
 # Dynamic Content Shoppable Image Extension
 
-This extension allows users to define Focal Points and interactable Hotspots over an image, in format similar to what Content Hub provides, but with the data being stored on a content item.
+This extension allows users to define Focal Points and interactable Hotspots over an image, in a format similar to what Content Hub provides, but with the data being stored on a content item.
 
 If you want to get started after cloning this repo, remember to sync packages with `yarn install`.
 

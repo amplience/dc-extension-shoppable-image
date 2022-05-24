@@ -145,7 +145,11 @@ Here is the JSON for this Shoppable Image:
   }
 ```
 
-The `image` field is a normal amplience media link. You can use the provided information to request the image. You can find more information [here.](TODO)
+The `image` field is a normal amplience media link. You can use the provided information to request the image. Here is an example handlebars template for generating an `<img>` `src` attribute from an `image` object:
+
+```hbs
+https://{{image.defaultHost}}/i/{{image.endpoint}}/{{image.name}}
+```
 
 The `poi` field represents a point of interest - an anchor point for the image to be centered around when cropping. The point of interest is technically a rectangle; it contains `x` and `y` positions, as well as width `w` and height `h`. The point is considered in the center of the rectangle.
 
