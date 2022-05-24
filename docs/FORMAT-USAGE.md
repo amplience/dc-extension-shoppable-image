@@ -4,7 +4,7 @@ This document will explain what each of the fields in the partial maps to, and h
 
 ## Example
 
-![Example of an image enriched with the Shoppable Image Extension](media/screenshot.png)
+![Example of an image enriched with the Shoppable Image Extension](../media/screenshot.png)
 
 In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a Point of Interest centered on the bird, and there is a hotspot just above and to the left of its head.
 
