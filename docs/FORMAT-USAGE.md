@@ -4,9 +4,9 @@ This document will explain what each of the fields in the partial maps to, and h
 
 ## Example
 
-![Example of an image enriched with the Shoppable Image Extension](../media/screenshot.png)
+![Example of an image enriched with the Shoppable Image Extension](../media/format-example.png)
 
-In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a Point of Interest centered on the bird, and there is a hotspot just above and to the left of its head.
+In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a Point of Interest centered on the camera, and there is a hotspot placed on top of a watch.
 
 Here is the JSON for this Shoppable Image:
 
@@ -17,132 +17,133 @@ Here is the JSON for this Shoppable Image:
       "_meta": {
         "schema": "http://bigcontent.io/cms/schema/v1/core#/definitions/image-link"
       },
-      "id": "4af7f665-4443-46c4-b237-ceebc4df556b",
-      "name": "image_033",
+      "id": "b82e697a-0c8d-4270-9241-58ce6b53948c",
+      "name": "hipster-bag",
       "endpoint": "csdemo",
       "defaultHost": "cdn.media.amplience.net"
     },
     "poi": {
-      "x": 0.2056464811783961,
-      "y": 0.5014192139737992,
-      "w": 0.11243862520458264,
+      "x": 0.38377001455604076,
+      "y": 0.7459606986899564,
+      "w": 0.09999999999999999,
       "h": 0.15
     },
-    "hotspots": [
+    "hotspots":[
       {
-        "id": "e1686765-95b4-4f87-b59d-cd4b04cf8c28",
-        "target": "target",
-        "selector": ".selector",
+        "id": "4b70802c-0499-4c6f-aa27-1e4ff0b125cb",
+        "target": "Watch",
+        "selector": ".watch",
         "points": {
-          "x": 0.22422258592471353,
-          "y": 0.16375545851528386
+          "x": 0.5647743813682679,
+          "y": 0.8384279475982532
         }
       }
     ],
     "polygons": [
       {
-        "id": "ec240325-eaa3-4426-bbc3-96151edb7119",
-        "target": "Cart",
-        "selector": ".cart",
+        "id": "744a00b9-0b21-47b5-800e-789911e0ad9a",
+        "target": "Shirt",
+        "selector": ".Shirt",
         "points": [
           {
-            "x": 0.38625204582651373,
-            "y": 0.3558951965065501
+            "x": 0.11062590975254731,
+            "y": 0.4912663755458515
           },
           {
-            "x": 0.8314238952536824,
-            "y": 0.3558951965065501
+            "x": 0.33624454148471616,
+            "y": 0.4912663755458515
           },
           {
-            "x": 0.8314238952536824,
-            "y": 0.8296943231441049
+            "x": 0.33624454148471616,
+            "y": 0.8973799126637555
           },
           {
-            "x": 0.38625204582651373,
-            "y": 0.8296943231441049
+            "x": 0.11062590975254731,
+            "y": 0.8973799126637555
           }
         ]
       },
       {
-        "id": "80a476d8-86c2-491f-b502-a85c3ea6e7f4",
-        "target": "Head",
-        "selector": ".head",
+        "id": "6264b28f-0db9-4caf-b4d5-900bfb140d1a",
+        "target": "Fabric",
+        "selector": ".fabric",
         "points": [
           {
-            "x": 0.2784779050736498,
-            "y": 0.22489082969432314
+            "x": 0.4735225618631732,
+            "y": 0.36899563318777295
           },
           {
-            "x": 0.3189034369885433,
-            "y": 0.22489082969432314
+            "x": 0.5352110625909757,
+            "y": 0.36899563318777295
           },
           {
-            "x": 0.3562193126022909,
-            "y": 0.24958515283842753
+            "x": 0.5921542940320236,
+            "y": 0.4127074235807857
           },
           {
-            "x": 0.37643207855973815,
-            "y": 0.29517467248908325
+            "x": 0.6229985443959243,
+            "y": 0.4934061135371177
           },
           {
-            "x": 0.37643207855973815,
-            "y": 0.3445633187772922
+            "x": 0.6229985443959243,
+            "y": 0.5808296943231442
           },
           {
-            "x": 0.3562193126022909,
-            "y": 0.39015283842794735
+            "x": 0.5921542940320236,
+            "y": 0.6615283842794764
           },
           {
-            "x": 0.3189034369885433,
-            "y": 0.4148471615720524
+            "x": 0.5352110625909757,
+            "y": 0.7052401746724891
           },
           {
-            "x": 0.2784779050736498,
-            "y": 0.4148471615720524
+            "x": 0.4735225618631732,
+            "y": 0.7052401746724891
           },
           {
-            "x": 0.24116202945990178,
-            "y": 0.39015283842794735
+            "x": 0.41657933042212547,
+            "y": 0.6615283842794764
           },
           {
-            "x": 0.220949263502455,
-            "y": 0.3445633187772922
+            "x": 0.38573508005822416,
+            "y": 0.5808296943231442
           },
           {
-            "x": 0.220949263502455,
-            "y": 0.29517467248908325
+            "x": 0.38573508005822416,
+            "y": 0.4934061135371177
           },
           {
-            "x": 0.24116202945990178,
-            "y": 0.24958515283842753
+            "x": 0.41657933042212547,
+            "y": 0.4127074235807857
           }
         ]
       },
       {
-        "id": "21ef15c1-49c3-42ae-94fd-5a1d888309b2",
-        "target": "Body",
-        "selector": ".body",
+        "id": "5678248d-6ad5-40c7-bb20-a68e9f3f1312",
+        "target": "Bag",
+        "selector": ".bag",
         "points": [
           {
-            "x": 0.04582651391162029,
-            "y": 0.4192139737991266
+            "x": 0.6506550218340611,
+            "y": 0.10043668122270744
           },
           {
-            "x": 0.3780687397708674,
-            "y": 0.4192139737991266
+            "x": 0.9068413391557496,
+            "y": 0.10043668122270744
           },
           {
-            "x": 0.3780687397708674,
-            "y": 0.8840611353711789
+            "x": 0.9068413391557496,
+            "y": 0.4781659388646288
           },
           {
-            "x": 0.04582651391162029,
-            "y": 0.8840611353711789
+            "x": 0.6506550218340611,
+            "y": 0.4781659388646288
           }
         ]
       }
     ]
   }
+}
 ```
 
 The `image` field is a normal amplience media link. You can use the provided information to request the image. Here is an example handlebars template for generating an `<img>` `src` attribute from an `image` object:
