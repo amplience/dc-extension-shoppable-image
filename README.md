@@ -40,8 +40,6 @@ This extension needs to be [registered](https://amplience.com/docs/development/r
 * URL: [https://shoppable-image.extensions.content.amplience.net](https://shoppable-image.extensions.content.amplience.net)
 * Description: Shoppable Image Extension _(can be left blank, if you wish)_
 
-To use the application the following permissions must be enabled:
-
 Note:
 You can use our deployed version of this extension (builds from the "production" branch) -
 
@@ -61,7 +59,7 @@ For information on the format structure, and how you might use it in your own re
 
 ## Visualization
 
-The webapp for the extension can also double as a standalone visualization for the shoppable image field. It will run in visualization mode if you provide `?vse={{vse.domain}}` as a query sting parameter, and will read back the field from the `shoppableImage` property of your content item. If you want to provide a different top level property, simply provide it in the query string like `fieldName=exampleImage`.
+The webapp for the extension can also double as a standalone visualization for the shoppable image field. It will run in visualization mode if you provide `?vse={{vse.domain}}` as a query string parameter, and will read back the field from the `shoppableImage` property of your content item. If you want to provide a different top level property, simply provide it in the query string like `fieldName=exampleImage`.
 
 The visualization uses the `dc-visualization-sdk` to update its preview as the field is being edited, so you'll be able to try hotspot interaction over your image as you add and move hotspots.
 

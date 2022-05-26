@@ -172,7 +172,7 @@ To place interactive elements over your image, you need both a container for the
 
 Hotspots are easy enough to place by creating a div and styling it yourself, but polygons prove a little more challenging as they can technically create any shape out of their points. The best way to deal with this is to render your polygon within an SVG, and then place that in your container.
 
-You can generate an SVG Path's `d` attribute using the points of the polygon, which will let you draw the path within an SVG with any styling and interaction of your choice. See [polygon-helper.tsx](src/preview/polygon/polygon-helper.tsx) for an example method that does this (`pointsToSVGPath`).
+You can generate an SVG Path's `d` attribute using the points of the polygon, which will let you draw the path within an SVG with any styling and interaction of your choice. See [polygon-helper.tsx](../src/preview/polygon/polygon-helper.tsx) for an example method that does this (`pointsToSVGPath`).
 
 ## Point of Interest
 

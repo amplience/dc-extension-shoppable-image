@@ -73,7 +73,7 @@ export function MetadataList({ className }: { className?: string }) {
   });
 
   return (
-    <TableContainer>
+    <TableContainer sx={{ overflowY: 'auto', maxHeight: '350px' }}>
       <Table aria-label="Metadata List">
         <TableBody>
           {field && field.poi && field.poi.x != null && (
