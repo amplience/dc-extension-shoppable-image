@@ -6,7 +6,7 @@ This document will explain what each of the fields in the partial maps to, and h
 
 ![Example of an image enriched with the Shoppable Image Extension](../media/format-example.png)
 
-In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a Point of Interest centered on the camera, and there is a hotspot placed on top of a watch.
+In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a point of interest centered on the camera, and there is a hotspot placed on top of a watch.
 
 Here is the JSON for this Shoppable Image:
 
@@ -154,13 +154,13 @@ https://{{image.defaultHost}}/i/{{image.endpoint}}/{{image.name}}
 
 The `poi` field represents a point of interest - an anchor point for the image to be centered around when cropping. The point of interest is technically a rectangle; it contains `x` and `y` positions, as well as width `w` and height `h`. The point is considered in the center of the rectangle.
 
-The `hotspots` field is an array of hotspot objects
+The `hotspots` field is an array of hotspot objects:
 - `id`: GUID for the hotspot. Can be used to uniquely identify the hotspot.
 - `target`: Target string. It's up to the user what this means.
 - `selector`: Selector string. It's up to the user what this means.
 - `points`: An object containing a single point for the hotspot. `x` and `y` contain the x and y postions, respectively.
 
-The `polygons` field is an array of polygon objects
+The `polygons` field is an array of polygon objects:
 - `id`: GUID for the polygon. Can be used to uniquely identify the polygon.
 - `target`: Target string. It's up to the user what this means.
 - `selector`: Selector string. It's up to the user what this means.
@@ -172,7 +172,7 @@ To place interactive elements over your image, you need both a container for the
 
 Hotspots are easy enough to place by creating a div and styling it yourself, but polygons prove a little more challenging as they can technically create any shape out of their points. The best way to deal with this is to render your polygon within an SVG, and then place that in your container.
 
-You can generate an SVG Path's `d` attribute using the points of the polygon, which will let you draw the path within an SVG with any styling and interaction of your choice. See [polygon-helper.tsx](../src/preview/polygon/polygon-helper.tsx) for an example method that does this (`pointsToSVGPath`).
+You can generate an SVG Path's `d` attribute using the points of the polygon, which will let you draw the path within an SVG with any styling and interaction of your choice. See [polygon-helper.ts](../src/preview/polygon/polygon-helper.ts) for an example method that does this (`pointsToSVGPath`).
 
 ## Point of Interest
 

@@ -27,7 +27,7 @@ function App() {
           {vse != null ? (
             <WithVisualizationContext fieldName={fieldName}>
               <div className="amp-app-vis-toolbar">
-                <FormGroup className="amp-app-vis-toolbar_">
+                <FormGroup className="amp-app-vis-toolbar__group">
                   <FormControlLabel
                     control={
                       <Checkbox

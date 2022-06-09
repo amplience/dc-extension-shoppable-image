@@ -7,10 +7,10 @@ export function WithWindowContext({
 }: {
   children: React.ReactNode;
 }) {
-  const [state, setState] = useState({ w: window.innerWidth, h: window.innerHeight});
+  const [state, setState] = useState({ w: window.innerWidth, h: window.innerHeight });
 
   const resizeWindow = () => {
-    setState({ w: window.innerWidth, h: window.innerHeight})
+    setState({ w: window.innerWidth, h: window.innerHeight });
   }
 
   useEffect(() => {

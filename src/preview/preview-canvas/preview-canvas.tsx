@@ -655,7 +655,7 @@ export function PreviewCanvas() {
           field.polygons &&
           polygons.map((polygon, index) => (
             <Polygon
-              key={index}
+              key={field.polygons![index].id}
               size={size}
               className={clsx("amp-preview-canvas__polygon", {
                 "amp-preview-canvas__polygon--selected":

@@ -8,7 +8,7 @@ This extension allows users to define Focal Points and interactable Hotspots ove
 
 If you want to get started after cloning this repo, remember to sync packages with `yarn install`.
 
-## Partial for Shoppabble image Field and Configuration
+## Partial for Shoppabble Image Field and Configuration
 
 The shoppable image extension has a rather complicated structure for the field it writes, so it's recommended that you put the schema in a partial. You can find the full partial definition in `shoppable-image-partial.json` in the base of this repository.
 
@@ -55,7 +55,7 @@ No additional permissions are required.
 
 The shoppable image extension creates a simple format that you can ingest in your site to use or represent hotspots and the point of interest however you want.
 
-For information on the format structure, and how you might use it in your own renderer or video player, see [this documentation.](docs/FORMAT-USAGE.md)
+For information on the format structure, and how you might use it in your own renderer, see [this documentation.](docs/FORMAT-USAGE.md)
 
 ## Visualization
 

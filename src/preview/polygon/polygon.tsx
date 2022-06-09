@@ -67,7 +67,6 @@ export function Polygon({
   polyRef?: React.ForwardedRef<SVGSVGElement>;
   svgProps?: SVGProps<unknown>;
 }) {
-  //const parsed = pointsToSVGPath(polygon.points);
   return (
     <svg
       viewBox={`0 0 ${polygon.bounds.w} ${polygon.bounds.h}`}

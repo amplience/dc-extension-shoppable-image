@@ -69,7 +69,6 @@ export function MetadataList({ className }: { className?: string }) {
         deletePoi();
       }
     }
-
   });
 
   return (

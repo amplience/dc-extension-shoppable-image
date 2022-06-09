@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { ShoppableImageData } from "../core/ShoppableImageData";
 import { init } from 'dc-visualization-sdk';
 
-interface ExtensionState {
+interface VisualizationState {
   field?: ShoppableImageData;
 }
 
-const defaultExtensionState: ExtensionState = {
+const defaultVisualizationState: VisualizationState = {
 };
 
-const VisualizationContext = React.createContext(defaultExtensionState);
+const VisualizationContext = React.createContext(defaultVisualizationState);
 
 export function WithVisualizationContext({
   fieldName,
@@ -18,11 +18,11 @@ export function WithVisualizationContext({
   fieldName: string;
   children: React.ReactNode;
 }) {
-  const [state, setState] = useState(defaultExtensionState);
+  const [state, setState] = useState(defaultVisualizationState);
 
   useEffect(() => {
     init().then(async (sdk) => {
-      const state: ExtensionState = { 
+      const state: VisualizationState = { 
         field: (await sdk.form.get({
           format: 'linked',
           depth: 'all'
