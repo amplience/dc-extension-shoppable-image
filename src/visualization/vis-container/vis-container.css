@@ -1,0 +1,11 @@
+.amp-vis-container-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  background-color: var(--color-lighter-grey);
+  width: 100%;
+  height: 42px;
+}
+
+.amp-vis-container-toolbar__group {
+  flex-direction: row !important;
+}
