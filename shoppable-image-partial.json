@@ -1,7 +1,5 @@
 {
     "shoppableImage": {
-        "title": "Shoppable Image",
-        "description": "An image enriched with a focal point and hotspots that can be used for user interaction.",
         "type": "object",
         "properties": {
             "image": {

@@ -9,6 +9,7 @@ import { MetadataList } from "./metadata/metadata-list/metadata-list";
 import { WithVisualizationContext } from "./visualization/visualization-context";
 import { WithWindowContext } from "./core/WindowContext";
 import { VisContainer } from "./visualization/vis-container/vis-container";
+import { Title } from "./preview/title/title";
 
 function App() {
   const params = new URL(document.location.href).searchParams;
@@ -26,9 +27,12 @@ function App() {
           ) : (
             <WithExtensionContext>
               <WithEditorContext>
-                <EditToolbar />
-                <PreviewCanvas />
-                <MetadataList />
+                <Title />
+                <div className="amp-app-clip">
+                  <EditToolbar />
+                  <PreviewCanvas />
+                  <MetadataList />
+                </div>
               </WithEditorContext>
             </WithExtensionContext>
           )}

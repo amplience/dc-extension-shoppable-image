@@ -3,14 +3,6 @@
   min-height: 500px;
 }
 
-.amp-app-vis-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  background-color: var(--color-lighter-grey);
-  width: 100%;
-  height: 42px;
-}
-
-.amp-app-vis-toolbar__group {
-  flex-direction: row !important;
+.amp-app-clip {
+  overflow: hidden;
 }

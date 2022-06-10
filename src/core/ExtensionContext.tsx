@@ -1,5 +1,6 @@
 import { ContentFieldExtension } from "dc-extensions-sdk";
 import React, { useEffect, useState } from "react";
+import { setFlagsFromString } from "v8";
 import { AutoResizer } from "./AutoResizer";
 import { getSdk } from "./ExtensionSdk";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
@@ -38,10 +39,15 @@ export function WithExtensionContext({
     getSdk().then(async (sdk) => {
       new AutoResizer(sdk);
 
-      const params = { ...sdk.params.installation, ...sdk.params.instance };
+      const params: any = { ...sdk.params.installation, ...sdk.params.instance };
+      const schema = sdk.field.schema;
       const field = await sdk.field.getValue() as ShoppableImageData;
       const undoHistory: ShoppableImageData[] = [];
       const redoHistory: ShoppableImageData[] = [];
+
+      if (params.title == null && schema.title) {
+        params.title = schema.title;
+      }
 
       const state: ExtensionState = { params, sdk, field, undoHistory, redoHistory, sdkConnected: true };
 
