@@ -98,14 +98,12 @@ export function PreviewCanvas() {
     };
 
     const getPageOffset = (elem: HTMLElement): { x: number; y: number } => {
-      const offset = { x: 0, y: 0 };
+      const rect = elem.getBoundingClientRect();
 
-      do {
-        offset.x += elem.offsetLeft;
-        offset.y += elem.offsetTop;
-      } while (elem.parentElement != null && (elem = elem.parentElement));
-
-      return offset;
+      return {
+        x: rect.x,
+        y: rect.y
+      };
     };
 
     const boundPoi = (poi: ShoppableImagePoi): ShoppableImagePoi => {
