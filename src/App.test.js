@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('renders amp-app div', () => {
+  const { container } = render(<App />);
+  const mainElement = container.getElementsByClassName('amp-app');
+  expect(mainElement).toBeDefined();
 });
