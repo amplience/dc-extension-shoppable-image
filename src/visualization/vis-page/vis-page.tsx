@@ -16,7 +16,7 @@ import {
 import { useVisualizationContext } from "../visualization-context";
 import { useWindowContext } from "../../core/WindowContext";
 
-export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspotHide: boolean, scaleToFit: boolean }) {
+export function VisPage({ vse, focalPointHide, hotspotHide, scaleToFit }: { vse: string, focalPointHide: boolean, hotspotHide: boolean, scaleToFit: boolean }) {
   const { field } = useVisualizationContext();
   const windowSize = useWindowContext();
   const [loaded, setLoaded] = useState(false);
@@ -50,7 +50,8 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
 
   let imageStyle: any = {};
   let canvas: JSX.Element | undefined;
-  const hidden = hotspotHide;
+  const hiddenHotspots = hotspotHide;
+  const hiddenFocalPoint = focalPointHide;
 
   if (field && loaded) {
     const widthBounded = imageSize.w / imageSize.h > targetAspect;
@@ -134,7 +135,7 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
         {field && field.poi && field.poi.x != null && (
           <div
             className={clsx("amp-vis-page__focalpoint", {
-              "amp-vis-page__focalpoint--hidden": hidden,
+              "amp-vis-page__focalpoint--hidden": hiddenFocalPoint,
             })}
             style={scaleSize(field.poi)}
           >
@@ -155,7 +156,7 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
               <PolygonForwardRef
                 size={size}
                 className={clsx("amp-vis-page__polygon", {
-                  "amp-vis-page__polygon--hidden": hidden,
+                  "amp-vis-page__polygon--hidden": hiddenHotspots,
                 })}
                 polygon={polygon}
               ></PolygonForwardRef>
@@ -168,7 +169,7 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
             <Tooltip key={index} title={hotspotTitle(hotspot)} followCursor>
               <div
                 className={clsx("amp-vis-page__hotspot", {
-                  "amp-vis-page__hotspot--hidden": hidden,
+                  "amp-vis-page__hotspot--hidden": hiddenHotspots,
                 })}
                 style={scaleHotspot(hotspot)}
               >
