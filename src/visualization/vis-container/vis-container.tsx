@@ -4,6 +4,7 @@ import { useState } from "react";
 import { VisPage } from "../vis-page/vis-page";
 
 export function VisContainer({ vse }: { vse: string }) {
+  const [focalPointHide, setFocalPointHide] = useState(false);
   const [hotspotHide, setHotspotHide] = useState(false);
   const [scaleToFit, setScaleToFit] = useState(false);
 
@@ -11,6 +12,15 @@ export function VisContainer({ vse }: { vse: string }) {
     <>
       <div className="amp-vis-container-toolbar">
         <FormGroup className="amp-vis-container-toolbar__group">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={focalPointHide}
+                onChange={(evt) => setFocalPointHide(evt.target.checked)}
+              />
+            }
+            label="Hide Focal Point"
+          />
           <FormControlLabel
             control={
               <Checkbox
@@ -31,7 +41,7 @@ export function VisContainer({ vse }: { vse: string }) {
           />
         </FormGroup>
       </div>
-      <VisPage hotspotHide={hotspotHide} scaleToFit={scaleToFit} vse={vse} />
+      <VisPage focalPointHide={focalPointHide} hotspotHide={hotspotHide} scaleToFit={scaleToFit} vse={vse} />
     </>
   );
 }
