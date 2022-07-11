@@ -15,12 +15,21 @@
   z-index: 101;
 }
 
+.amp-mode-buttons.empty {
+  opacity: 1;
+  background-color: inherit;
+}
+
 .amp-mode-buttons button {
   margin: 10px;
 }
 
 .amp-mode-buttons:hover {
   opacity: 1;
+}
+
+.amp-mode-buttons.empty:hover {
+  background-color: rgba(41,51,63,.8);
 }
 
 .amp-mode-buttons__hide {

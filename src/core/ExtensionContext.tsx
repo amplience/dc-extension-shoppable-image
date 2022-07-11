@@ -1,14 +1,11 @@
-import { ContentFieldExtension } from "dc-extensions-sdk";
+import { ContentFieldExtension, ContentEditorExtension } from "dc-extensions-sdk";
 import React, { useEffect, useState } from "react";
-import { setFlagsFromString } from "v8";
 import { AutoResizer } from "./AutoResizer";
 import { getSdk } from "./ExtensionSdk";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
-import { ShoppableImageData } from "./ShoppableImageData";
-
-interface ExtensionState {
+import { ShoppableImageData } from "./ShoppableImageData";interface ExtensionState {
   params?: any;
-  sdk?: ContentFieldExtension;
+  sdk?: ContentFieldExtension | ContentEditorExtension;
   field?: ShoppableImageData;
   setField?: () => void;
   setUndo?: () => void;
@@ -18,12 +15,14 @@ interface ExtensionState {
   undoHistory: ShoppableImageData[];
   redoHistory: ShoppableImageData[];
   sdkConnected: boolean;
+  isField: boolean;
 }
 
 const defaultExtensionState: ExtensionState = {
   undoHistory: [],
   redoHistory: [],
-  sdkConnected: false
+  sdkConnected: false,
+  isField: true
 };
 
 const ExtensionContext = React.createContext(defaultExtensionState);
@@ -37,11 +36,13 @@ export function WithExtensionContext({
 
   useEffect(() => {
     getSdk().then(async (sdk) => {
-      new AutoResizer(sdk);
-
+      const isField = sdk instanceof ContentFieldExtension;
+      if(isField) {
+        new AutoResizer(sdk);
+      }
       const params: any = { ...sdk.params.installation, ...sdk.params.instance };
-      const schema = sdk.field.schema;
-      const field = await sdk.field.getValue() as ShoppableImageData;
+      const schema = isField ? sdk.field.schema : sdk.schema;
+      const field = isField ? await sdk.field.getValue() as ShoppableImageData : await sdk.form.getValue() as ShoppableImageData;
       const undoHistory: ShoppableImageData[] = [];
       const redoHistory: ShoppableImageData[] = [];
 
@@ -49,10 +50,10 @@ export function WithExtensionContext({
         params.title = schema.title;
       }
 
-      const state: ExtensionState = { params, sdk, field, undoHistory, redoHistory, sdkConnected: true };
+      const state: ExtensionState = { params, sdk, field, undoHistory, redoHistory, sdkConnected: true, isField };
 
       state.setField = () => {
-        sdk.field.setValue(field);
+        isField ? sdk.field.setValue(field) : sdk.form.setValue(field);
         setState({ ...state });
       }
 
@@ -68,7 +69,7 @@ export function WithExtensionContext({
         if (undo) {
           redoHistory.push(JSON.parse(JSON.stringify(field)));
           Object.assign(field, undo);
-          sdk.field.setValue(field);
+          isField ? sdk.field.setValue(field) : sdk.form.setValue(field);
           setState({ ...state });
         }
       }
@@ -79,7 +80,7 @@ export function WithExtensionContext({
         if (redo) {
           undoHistory.push(JSON.parse(JSON.stringify(field)));
           Object.assign(field, redo);
-          sdk.field.setValue(field);
+          isField ? sdk.field.setValue(field) : sdk.form.setValue(field);
           setState({ ...state });
         }
       }

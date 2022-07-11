@@ -188,7 +188,7 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
 
   let image: JSX.Element | undefined;
   let src = "invalid";
-  if (field && field.image.id) {
+  if (field?.image?.id) {
     const imageHost = vse || field.image.defaultHost;
     src = `https://${imageHost}/i/${field.image.endpoint}/${encodeURIComponent(
       field.image.name

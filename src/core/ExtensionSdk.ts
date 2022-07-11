@@ -1,8 +1,8 @@
-import { init, ContentFieldExtension } from 'dc-extensions-sdk';
+import { init, ContentFieldExtension, ContentEditorExtension } from 'dc-extensions-sdk';
 
-let sdk: Promise<ContentFieldExtension>;
+let sdk: Promise<ContentFieldExtension | ContentEditorExtension>;
 
-export async function getSdk(): Promise<ContentFieldExtension> {
+export async function getSdk(): Promise<ContentFieldExtension | ContentEditorExtension> {
   if (sdk == null) {
     sdk = init();
   }

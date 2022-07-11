@@ -13,7 +13,7 @@ export function ModeButtons() {
   const { mode, changeMode } = useEditorContext();
 
   const showButtons = mode === EditorMode.Initial;
-  const hasImage = field && field.image.id;
+  const hasImage = field?.image?.id;
 
   const modeButton = async (mode: EditorMode): Promise<void> => {
     if (sdk && field && setField && clearUndo) {
@@ -49,7 +49,7 @@ export function ModeButtons() {
   }
 
   return (
-    <div className="amp-mode-buttons">
+    <div className={`amp-mode-buttons ${!hasImage ? 'empty' : ''}`}>
       {hasImage && (
         <>
           <Tooltip title="Edit image & focal point">
