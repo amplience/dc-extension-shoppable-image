@@ -8,7 +8,7 @@ This extension allows users to define Focal Points and interactable Hotspots ove
 
 If you want to get started after cloning this repo, remember to sync packages with `yarn install`.
 
-This project requires Node 14.x or 16.x to build.
+This project requires Node 16.x to build.
 
 ## Partial for Shoppabble Image Field and Configuration
 
