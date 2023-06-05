@@ -8,6 +8,8 @@ This extension allows users to define Focal Points and interactable Hotspots ove
 
 If you want to get started after cloning this repo, remember to sync packages with `yarn install`.
 
+This project requires Node 16.x to build.
+
 ## Partial for Shoppabble Image Field and Configuration
 
 The shoppable image extension has a rather complicated structure for the field it writes, so it's recommended that you put the schema in a partial. You can find the full partial definition in `shoppable-image-partial.json` in the base of this repository.
