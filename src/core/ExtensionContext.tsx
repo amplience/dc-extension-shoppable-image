@@ -1,10 +1,10 @@
 import { ContentFieldExtension } from "dc-extensions-sdk";
 import React, { useEffect, useState } from "react";
-import { setFlagsFromString } from "v8";
 import { AutoResizer } from "./AutoResizer";
 import { getSdk } from "./ExtensionSdk";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
 import { ShoppableImageData } from "./ShoppableImageData";
+import AIRequestService from "./AIRequestService";
 
 interface ExtensionState {
   params?: any;
@@ -18,12 +18,17 @@ interface ExtensionState {
   undoHistory: ShoppableImageData[];
   redoHistory: ShoppableImageData[];
   sdkConnected: boolean;
+  AIService?: AIRequestService;
+  thumbURL: string;
+  setThumbUrl: { (x: string): void };
 }
 
 const defaultExtensionState: ExtensionState = {
   undoHistory: [],
   redoHistory: [],
-  sdkConnected: false
+  sdkConnected: false,
+  thumbURL: "",
+  setThumbUrl: () => {},
 };
 
 const ExtensionContext = React.createContext(defaultExtensionState);
@@ -36,65 +41,92 @@ export function WithExtensionContext({
   const [state, setState] = useState(defaultExtensionState);
 
   useEffect(() => {
-    getSdk().then(async (sdk) => {
-      new AutoResizer(sdk);
+    getSdk()
+      .then(async (sdk) => {
+        new AutoResizer(sdk);
 
-      const params: any = { ...sdk.params.installation, ...sdk.params.instance };
-      const schema = sdk.field.schema;
-      const field = await sdk.field.getValue() as ShoppableImageData;
-      const undoHistory: ShoppableImageData[] = [];
-      const redoHistory: ShoppableImageData[] = [];
+        const params: any = {
+          ...sdk.params.installation,
+          ...sdk.params.instance,
+        };
+        const schema = sdk.field.schema;
+        const formValue = (await sdk.field.getValue()) as ShoppableImageData;
+        const hasImage = !(formValue as { image: { _empty?: boolean } }).image
+          ?._empty;
+        const asset = hasImage
+          ? await sdk.assets.getById(formValue.image.id)
+          : {};
+        const thumbURL = asset.thumbURL;
+        const field = formValue;
+        const undoHistory: ShoppableImageData[] = [];
+        const redoHistory: ShoppableImageData[] = [];
+        const AIService = new AIRequestService(sdk, params?.ai?.basePath || "");
 
-      if (params.title == null && schema.title) {
-        params.title = schema.title;
-      }
+        if (params.title == null && schema.title) {
+          params.title = schema.title;
+        }
 
-      const state: ExtensionState = { params, sdk, field, undoHistory, redoHistory, sdkConnected: true };
+        const setThumbUrl = (url: string) => {
+          state.thumbURL = url;
+        };
 
-      state.setField = () => {
-        sdk.field.setValue(field);
-        setState({ ...state });
-      }
+        const state: ExtensionState = {
+          params,
+          sdk,
+          field,
+          undoHistory,
+          redoHistory,
+          AIService,
+          sdkConnected: true,
+          thumbURL,
+          setThumbUrl,
+        };
 
-      state.setUndo = () => {
-        redoHistory.splice(0, redoHistory.length);
-        undoHistory.push(JSON.parse(JSON.stringify(field)));
-        setState({ ...state });
-      }
-
-      state.undo = () => {
-        const undo = undoHistory.pop();
-
-        if (undo) {
-          redoHistory.push(JSON.parse(JSON.stringify(field)));
-          Object.assign(field, undo);
+        state.setField = () => {
           sdk.field.setValue(field);
           setState({ ...state });
-        }
-      }
+        };
 
-      state.redo = () => {
-        const redo = redoHistory.pop();
-
-        if (redo) {
+        state.setUndo = () => {
+          redoHistory.splice(0, redoHistory.length);
           undoHistory.push(JSON.parse(JSON.stringify(field)));
-          Object.assign(field, redo);
-          sdk.field.setValue(field);
           setState({ ...state });
-        }
-      }
+        };
 
-      state.clearUndo = () => {
-        redoHistory.splice(0, redoHistory.length);
-        undoHistory.splice(0, undoHistory.length);
-      }
+        state.undo = () => {
+          const undo = undoHistory.pop();
 
-      KeyboardShortcuts.bindUndoMethods(state.undo, state.redo);
+          if (undo) {
+            redoHistory.push(JSON.parse(JSON.stringify(field)));
+            Object.assign(field, undo);
+            sdk.field.setValue(field);
+            setState({ ...state });
+          }
+        };
 
-      setState(state);
-    }).catch((e) => {
-      console.error(e);
-    });
+        state.redo = () => {
+          const redo = redoHistory.pop();
+
+          if (redo) {
+            undoHistory.push(JSON.parse(JSON.stringify(field)));
+            Object.assign(field, redo);
+            sdk.field.setValue(field);
+            setState({ ...state });
+          }
+        };
+
+        state.clearUndo = () => {
+          redoHistory.splice(0, redoHistory.length);
+          undoHistory.splice(0, undoHistory.length);
+        };
+
+        KeyboardShortcuts.bindUndoMethods(state.undo, state.redo);
+
+        setState(state);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }, []);
 
   return (

@@ -1,0 +1,84 @@
+.amp-ai-drawer .MuiPaper-root {
+  background: hsl(0, 0%, 94%);
+  margin-top: 3rem;
+}
+
+.amp-drawer-title {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0;
+  padding: 1rem 1.5rem;
+}
+
+.amp-drawer-subtitle {
+  color: #333;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0 1.5rem 1rem;
+}
+
+.amp-ai-drawer {
+  text-align: center;
+}
+
+.amp-ai-drawer .amp-ai-detect-button-form {
+  margin: 10px 60px 10px 60px;
+}
+
+.amp-ai-drawer .amp-ai-detect-button__ai {
+  position: relative;
+}
+
+.amp-ai-drawer .amp-ai-detect-button__ai__blue svg {
+  fill: #039be5;
+}
+
+
+.amp-ai-drawer .amp-ai-drawer__form {
+  margin: 10px 60px 10px 60px;
+  align-items: center;
+}
+
+.amp-ai-drawer-instructions {
+  margin: 0;
+  padding: 0 1.5rem 1rem;
+  text-align: center;
+  max-width: 460px;
+  align-self: center;
+}
+
+.amp-ai-drawer .amp-ai-drawer__button__large {
+  margin: 10px;
+}
+
+.amp-ai-drawer .amp-ai-drawer__button__remove {
+  background: red;
+}
+
+.amp-ai-drawer .MuiBackdrop-root {
+  background-color: inherit;
+}
+
+.amp-ai-drawer .MuiFormControlLabel-label{
+  display: flex;
+}
+
+.amp-ai-drawer__modeicon {
+  margin: 0;
+  margin-right: 4px;
+}
+
+.amp-ai-drawer .MuiFormControlLabel-label span {
+  font-size: 0.8rem;
+  align-self: center;
+}
+
+.amp-ai-drawer__rot45 {
+  transform: rotate(45deg);
+}
+
+.amp-ai-drawer__table {
+  margin-bottom: 3rem;
+}

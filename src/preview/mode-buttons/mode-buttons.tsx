@@ -7,10 +7,18 @@ import "./mode-buttons.css";
 import Tooltip from "@mui/material/Tooltip";
 import { useExtensionContext } from "../../core/ExtensionContext";
 import { EditorMode, useEditorContext } from "../../core/EditorContext";
+import { Box, Grid, Typography } from "@mui/material";
+import { useState } from "react";
 
 export function ModeButtons() {
-  const { sdk, field, setField, clearUndo } = useExtensionContext();
-  const { mode, changeMode } = useEditorContext();
+  const { sdk, field, setField, clearUndo, setThumbUrl } =
+    useExtensionContext();
+  const { mode, changeMode, clearAi, setDrawerVisible } = useEditorContext();
+
+  const [hover, setHover] = useState(false);
+
+  const handleMouseEnter = () => setHover(true);
+  const handleMouseLeave = () => setHover(false);
 
   const showButtons = mode === EditorMode.Initial;
   const hasImage = field && field.image.id;
@@ -19,8 +27,12 @@ export function ModeButtons() {
     if (sdk && field && setField && clearUndo) {
       switch (mode) {
         case EditorMode.Swap:
-          field.image = await sdk.mediaLink.getImage();
+          const image = await sdk.mediaLink.getImage();
+          const asset = await sdk.assets.getById(image.id);
 
+          setThumbUrl(asset.thumbURL);
+
+          field.image = image;
           field.poi = {} as any;
           field.hotspots = [];
           field.polygons = [];
@@ -39,6 +51,7 @@ export function ModeButtons() {
           break;
         default:
           changeMode(mode);
+          setDrawerVisible(true);
           break;
       }
     }
@@ -49,33 +62,54 @@ export function ModeButtons() {
   }
 
   return (
-    <div className="amp-mode-buttons">
+    <Box
+      className="amp-mode-buttons-wrapper"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {!hasImage && (
+        <div className="amp-mode-buttons__empty">
+          <Tooltip title="Add" placement="top">
+            <Fab
+              className="amp-mode__add"
+              onClick={() => modeButton(EditorMode.Swap)}
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+          Add a shoppable image
+        </div>
+      )}
+
       {hasImage && (
-        <>
+        <div className="amp-mode-buttons">
           <Tooltip title="Edit image & focal point">
             <Fab onClick={() => modeButton(EditorMode.EditorPoi)}>
               <EditIcon />
             </Fab>
           </Tooltip>
           <Tooltip title="Replace">
-            <Fab onClick={() => modeButton(EditorMode.Swap)}>
+            <Fab
+              onClick={() => {
+                modeButton(EditorMode.Swap);
+                clearAi();
+              }}
+            >
               <SwapHorizIcon />
             </Fab>
           </Tooltip>
           <Tooltip title="Remove">
-            <Fab onClick={() => modeButton(EditorMode.Delete)}>
+            <Fab
+              onClick={() => {
+                modeButton(EditorMode.Delete);
+                clearAi();
+              }}
+            >
               <DeleteIcon />
             </Fab>
           </Tooltip>
-        </>
+        </div>
       )}
-      {!hasImage && (
-        <Tooltip title="Set image">
-          <Fab onClick={() => modeButton(EditorMode.Swap)}>
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      )}
-    </div>
+    </Box>
   );
 }
