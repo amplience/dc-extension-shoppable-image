@@ -7,10 +7,14 @@
   margin-top: 0;
   display: flex;
   position: relative;
-  z-index: 1;
+  z-index: 1400;
   background-color: var(--color-lighter-grey);
   width: 100%;
   height: 42px;
+}
+
+.amp-edit-toolbar .MuiAlert-standard {
+  align-items: center;
 }
 
 .amp-edit-toolbar button {
@@ -43,6 +47,19 @@
 .amp-edit-toolbar__modeicon {
   margin-left: -3px;
   margin-right: 3px;
+}
+.amp-edit-toolbar__ai {
+  position: relative;
+}
+
+.amp-edit-toolbar__ai__blue svg {
+  fill: #039be5;
+}
+
+.amp-edit-toolbar__status {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
 }
 
 .amp-edit-toolbar__rot45 {
