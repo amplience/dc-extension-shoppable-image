@@ -1,6 +1,7 @@
 import "./App.css";
 import { WithEditorContext } from "./core/EditorContext";
 import { PreviewCanvas } from "./preview/preview-canvas/preview-canvas";
+import { AIDrawer } from "./preview/ai-drawer/ai-drawer";
 import { EditToolbar } from "./preview/edit-toolbar/edit-toolbar";
 import { WithExtensionContext } from "./core/ExtensionContext";
 import { ThemeProvider } from "@emotion/react";
@@ -32,6 +33,7 @@ function App() {
                   <EditToolbar />
                   <PreviewCanvas />
                   <MetadataList />
+                  <AIDrawer/>
                 </div>
               </WithEditorContext>
             </WithExtensionContext>

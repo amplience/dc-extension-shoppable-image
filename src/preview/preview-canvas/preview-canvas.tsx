@@ -25,8 +25,8 @@ import { useWindowContext } from "../../core/WindowContext";
 import { v4 as uuidv4 } from "uuid";
 
 export function PreviewCanvas() {
-  const { mode, selection, setSelection } = useEditorContext();
-  const { sdk, field, setField, setUndo } = useExtensionContext();
+  const { mode, selection, setSelection, setAspect } = useEditorContext();
+  const { sdk, field, setField, setUndo, thumbURL } = useExtensionContext();
   const windowSize = useWindowContext();
   const [loaded, setLoaded] = useState(false);
   const [cursor, setCursor] = useState("default");
@@ -40,6 +40,8 @@ export function PreviewCanvas() {
   const targetHeight = 458;
   const targetWidth = windowSize.w;
   const targetAspect = targetWidth / targetHeight;
+
+  let aspect = { x: 1, y: 1 };
 
   let polygons: SVGPath[] = [];
 
@@ -66,7 +68,7 @@ export function PreviewCanvas() {
 
     const unitScale = widthBounded ? targetHeight / targetWidth : 1;
 
-    const aspect = {
+    aspect = {
       x: unitScale * (widthBounded ? 1 : canvasHeight / canvasWidth),
       y: unitScale * (widthBounded ? canvasWidth / canvasHeight : 1),
     };
@@ -102,7 +104,7 @@ export function PreviewCanvas() {
 
       return {
         x: rect.x,
-        y: rect.y
+        y: rect.y,
       };
     };
 
@@ -672,10 +674,11 @@ export function PreviewCanvas() {
   let image: JSX.Element | undefined;
   let src = "invalid";
   if (field && field.image.id) {
-    const imageHost = sdk?.stagingEnvironment || field.image.defaultHost;
-    src = `https://${imageHost}/i/${field.image.endpoint}/${encodeURIComponent(
-      field.image.name
-    )}`;
+    src = sdk?.stagingEnvironment
+      ? `https://${sdk.stagingEnvironment}/i/${
+          field.image.endpoint
+        }/${encodeURIComponent(field.image.name)}`
+      : thumbURL;
 
     image = (
       <img
@@ -698,12 +701,22 @@ export function PreviewCanvas() {
     setLoaded(false);
   }, [src]);
 
+  useEffect(() => {
+    setAspect(aspect);
+  }, [loaded]);
+
   return (
-    <div className="amp-preview-canvas">
-      {image || false}
-      {image && !loaded && <CircularProgress />}
-      {canvas || false}
-      <ModeButtons />
+    <div>
+      {image && !loaded && (
+        <div className="amp-preview-canvas-progress">
+          <CircularProgress />
+        </div>
+      )}
+      <div className="amp-preview-canvas">
+        {image || false}
+        {canvas || false}
+        <ModeButtons />
+      </div>
     </div>
   );
 }
