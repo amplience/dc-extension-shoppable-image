@@ -1,3 +1,12 @@
+.amp-mode-buttons-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .amp-mode-buttons {
   width: 100%;
   height: 100%;
@@ -7,8 +16,8 @@
   justify-content: center;
   align-items: center;
 
-  background-color: rgba(41,51,63,.8);
-  transition: all .3s;
+  background-color: rgba(41, 51, 63, 0.8);
+  transition: all 0.3s;
   opacity: 0;
 
   position: absolute;
@@ -26,4 +35,32 @@
 .amp-mode-buttons__hide {
   opacity: 0;
   pointer-events: none;
+}
+
+.amp-mode-buttons__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-direction: column;
+  background: #e5e5e5;
+  color: #666;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s;
+}
+
+.amp-mode-buttons__empty:hover {
+  background: #ccc;
+  color: #333;
+}
+
+.amp-mode__add {
+  background-color: white !important;
+  color: #e5e5e5 !important;
+}
+
+.amp-mode__add:hover {
+  background-color: #039be5 !important;
+  color: white !important;
 }

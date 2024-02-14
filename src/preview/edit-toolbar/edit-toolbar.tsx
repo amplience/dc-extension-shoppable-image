@@ -1,14 +1,13 @@
 import "./edit-toolbar.css";
 import clsx from "clsx";
 import { EditorMode } from "../../core/EditorContext";
+import { AIState } from "../../core/AIImageData";
 import { useEditorContext } from "../../core/EditorContext";
 import { useExtensionContext } from "../../core/ExtensionContext";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Undo from "@mui/icons-material/Undo";
-import Redo from "@mui/icons-material/Redo";
-import { Menu, MenuItem, Tooltip } from "@mui/material";
+import { Menu, MenuItem, Tooltip, Button, Divider, Snackbar, Alert } from "@mui/material";
 import {
+  Undo,
+  Redo,
   CircleOutlined,
   CropSquareSharp,
   GpsFixed,
@@ -18,10 +17,12 @@ import {
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
-  const { mode, changeMode } = useEditorContext();
-  const { undoHistory, undo, redoHistory, redo } = useExtensionContext();
+  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai } = useEditorContext();
+  const { undoHistory, undo, redoHistory, redo, params } = useExtensionContext();
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+  const [showError, setShowError] = React.useState(true);
   const open = anchorEl != null;
+  const error = ai.state === AIState.Error;
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -50,7 +51,10 @@ export function EditToolbar({ className }: { className?: string }) {
             <Button
               variant="contained"
               color={mode === EditorMode.EditorPoi ? "primary" : "secondary"}
-              onClick={() => changeMode(EditorMode.EditorPoi)}
+              onClick={() => {
+                changeMode(EditorMode.EditorPoi);
+                setAnchorEl(null);
+              }}
               disableElevation
             >
               <GpsFixed className="amp-edit-toolbar__modeicon" />
@@ -64,7 +68,10 @@ export function EditToolbar({ className }: { className?: string }) {
               color={
                 mode === EditorMode.EditorHotspot ? "primary" : "secondary"
               }
-              onClick={() => changeMode(EditorMode.EditorHotspot)}
+              onClick={() => {
+                changeMode(EditorMode.EditorHotspot);
+                setAnchorEl(null);
+              }}
               disableElevation
             >
               <HighlightOff className="amp-edit-toolbar__modeicon amp-edit-toolbar__rot45" />
@@ -77,8 +84,8 @@ export function EditToolbar({ className }: { className?: string }) {
               variant="contained"
               color={
                 mode === EditorMode.EditorGrab ||
-                mode === EditorMode.EditorPolygonCircle ||
-                mode === EditorMode.EditorPolygonRect
+                  mode === EditorMode.EditorPolygonCircle ||
+                  mode === EditorMode.EditorPolygonRect
                   ? "primary"
                   : "secondary"
               }
@@ -142,18 +149,51 @@ export function EditToolbar({ className }: { className?: string }) {
           >
             <Redo />
           </Button>
+
+          <Divider orientation="vertical" variant="middle" flexItem />
+          <Button
+            variant="contained"
+            color={ ai.drawerOpen ? "primary" : "secondary" }
+            onClick={() => {
+              if (toggleAIDrawer) {
+                toggleAIDrawer();
+              }
+              setAnchorEl(null);
+            }}
+          >
+            AI Assistant
+          </Button>
+
         </div>
       </div>
       <div className="amp-edit-toolbar__right">
         <Button
           variant="contained"
           color="primary"
-          onClick={() => changeMode(EditorMode.Initial)}
+          onClick={() => {
+              changeMode(EditorMode.Initial);
+              setDrawerVisible(false);
+              setAnchorEl(null);
+            }
+          }
           disableElevation
         >
           Done
         </Button>
       </div>
+      {error && (
+        <Snackbar open={showError} onClose={() => { setShowError(false) }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+          <Alert severity="error" action={
+            <Button color="inherit" size="small" onClick={() => { setShowError(false) }}>
+              OK
+            </Button>
+          }
+          >
+            Error fetching AI Objects
+          </Alert>
+        </Snackbar>
+      )}
     </div>
   );
 }

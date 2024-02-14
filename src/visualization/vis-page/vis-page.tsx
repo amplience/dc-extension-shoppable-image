@@ -15,13 +15,23 @@ import {
 } from "../../preview/polygon/polygon";
 import { useVisualizationContext } from "../visualization-context";
 import { useWindowContext } from "../../core/WindowContext";
+import { useExtensionContext } from "../../core/ExtensionContext";
 
-export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspotHide: boolean, scaleToFit: boolean }) {
+export function VisPage({
+  vse,
+  hotspotHide,
+  scaleToFit,
+}: {
+  vse: string;
+  hotspotHide: boolean;
+  scaleToFit: boolean;
+}) {
   const { field } = useVisualizationContext();
   const windowSize = useWindowContext();
   const [loaded, setLoaded] = useState(false);
   const [imageSize, setImageSize] = useState({ w: -1, h: -1 });
   const toolbarHeight = 42;
+  const { thumbURL } = useExtensionContext();
 
   const targetWidth = windowSize.w;
   const targetHeight = windowSize.h - toolbarHeight;
@@ -40,7 +50,9 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
     }
   };
 
-  const hotspotTitle = (hotspot: ShoppableImageHotspot | ShoppableImagePolygon) => {
+  const hotspotTitle = (
+    hotspot: ShoppableImageHotspot | ShoppableImagePolygon
+  ) => {
     return `Target: ${hotspot.target} | Selector: ${hotspot.selector}`;
   };
 
@@ -57,7 +69,7 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
 
     let canvasHeight: number, canvasWidth: number;
 
-    let offsetTransform = '';
+    let offsetTransform = "";
 
     if (scaleToFit) {
       // Scale image to canvas. Focal point is not used.
@@ -87,16 +99,24 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
           // Width overflow, center on x.
           const maxDist = (canvasWidth - targetWidth) / 2;
 
-          offsetTransform = `translate(${Math.min(maxDist, Math.max(-poiX, -maxDist))}px, 0)`;
+          offsetTransform = `translate(${Math.min(
+            maxDist,
+            Math.max(-poiX, -maxDist)
+          )}px, 0)`;
         } else {
           // Height overflow, center on y.
           const maxDist = (canvasHeight - targetHeight) / 2;
 
-          offsetTransform = `translate(0, ${Math.min(maxDist, Math.max(-poiY, -maxDist))}px)`;
+          offsetTransform = `translate(0, ${Math.min(
+            maxDist,
+            Math.max(-poiY, -maxDist)
+          )}px)`;
         }
       }
 
-      imageStyle = widthBounded ? { height: "100%", maxWidth: "none" } : { width: "100%", maxHeight: "none" };
+      imageStyle = widthBounded
+        ? { height: "100%", maxWidth: "none" }
+        : { width: "100%", maxHeight: "none" };
     }
 
     imageStyle.transform = offsetTransform;
@@ -127,7 +147,7 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
         style={{
           width: canvasWidth + "px",
           height: canvasHeight + "px",
-          transform: offsetTransform
+          transform: offsetTransform,
         }}
         ref={canvasRef}
       >
@@ -189,10 +209,11 @@ export function VisPage({ vse, hotspotHide, scaleToFit }: { vse: string, hotspot
   let image: JSX.Element | undefined;
   let src = "invalid";
   if (field && field.image.id) {
-    const imageHost = vse || field.image.defaultHost;
-    src = `https://${imageHost}/i/${field.image.endpoint}/${encodeURIComponent(
-      field.image.name
-    )}`;
+    src = vse
+      ? `https://${vse}/i/${field.image.endpoint}/${encodeURIComponent(
+          field.image.name
+        )}`
+      : thumbURL;
 
     image = (
       <img
