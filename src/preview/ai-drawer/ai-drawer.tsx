@@ -243,7 +243,7 @@ export function AIDrawer() {
             <Button
               variant="contained"
               disabled={loading}
-              data-id="automatically-detect"
+              data-id="shoppable-automatically-detect"
               onClick={() => fetchAI()}
             >
               {loading && (
@@ -265,7 +265,7 @@ export function AIDrawer() {
             <Button
               variant="contained"
               className="amp-ai-drawer__button__large"
-              data-id="add-all"
+              data-id="shoppable-add-all"
               onClick={() => {
                 addAll();
               }}

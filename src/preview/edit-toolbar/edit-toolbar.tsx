@@ -61,7 +61,7 @@ export function EditToolbar({ className }: { className?: string }) {
             <Button
               variant="contained"
               color={mode === EditorMode.EditorPoi ? "primary" : "secondary"}
-              data-id="focal-point"
+              data-id="shoppable-focal-point"
               onClick={() => {
                 changeMode(EditorMode.EditorPoi);
                 setAnchorEl(null);
@@ -79,7 +79,7 @@ export function EditToolbar({ className }: { className?: string }) {
               color={
                 mode === EditorMode.EditorHotspot ? "primary" : "secondary"
               }
-              data-id="hotspots"
+              data-id="shoppable-hotspots"
               onClick={() => {
                 changeMode(EditorMode.EditorHotspot);
                 setAnchorEl(null);
@@ -101,7 +101,7 @@ export function EditToolbar({ className }: { className?: string }) {
                   ? "primary"
                   : "secondary"
               }
-              data-id="polygon-hotspot"
+              data-id="shoppable-polygon-hotspot"
               onClick={(evt) => {
                 changeMode(EditorMode.EditorGrab);
                 setAnchorEl(evt.currentTarget);
@@ -118,7 +118,7 @@ export function EditToolbar({ className }: { className?: string }) {
                 changeMode(EditorMode.EditorPolygonRect);
                 handleClose();
               }}
-              data-id="rectangular-hotspot"
+              data-id="shoppable-rectangular-hotspot"
             >
               Rectangular Hotspot
             </MenuItem>
@@ -127,7 +127,7 @@ export function EditToolbar({ className }: { className?: string }) {
                 changeMode(EditorMode.EditorPolygonCircle);
                 handleClose();
               }}
-              data-id="circular-hotspot"
+              data-id="shoppable-circular-hotspot"
             >
               Circular Hotspot
             </MenuItem>
@@ -141,7 +141,7 @@ export function EditToolbar({ className }: { className?: string }) {
             className="amp-edit-toolbar__reset"
             disableElevation
             disabled={undoHistory.length === 0}
-            data-id="undo"
+            data-id="shoppable-undo"
             onClick={() => {
               if (undo) {
                 undo();
@@ -157,7 +157,7 @@ export function EditToolbar({ className }: { className?: string }) {
             className="amp-edit-toolbar__reset"
             disableElevation
             disabled={redoHistory.length === 0}
-            data-id="redo"
+            data-id="shoppable-redo"
             onClick={() => {
               if (redo) {
                 redo();
@@ -171,7 +171,7 @@ export function EditToolbar({ className }: { className?: string }) {
           <Button
             variant="contained"
             color={ai.drawerOpen ? "primary" : "secondary"}
-            data-id="ai-assistant"
+            data-id="shoppable-ai-assistant"
             onClick={() => {
               if (toggleAIDrawer) {
                 toggleAIDrawer();
@@ -187,7 +187,7 @@ export function EditToolbar({ className }: { className?: string }) {
         <Button
           variant="contained"
           color="primary"
-          data-id="done"
+          data-id="shoppable-done"
           onClick={() => {
             changeMode(EditorMode.Initial);
             setDrawerVisible(false);
