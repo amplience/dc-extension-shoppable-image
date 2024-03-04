@@ -3,10 +3,10 @@ import { useEditorContext, EditorMode } from "../../core/EditorContext";
 import { useExtensionContext } from "../../core/ExtensionContext";
 import { AIState, ObjectData } from "../../core/AIImageData";
 import React, { useState } from "react";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
 import {
   Drawer,
   Button,
@@ -21,14 +21,11 @@ import {
   AlertTitle,
   Link,
 } from "@mui/material";
-import {
-  Add,
-  Delete,
-  AutoAwesome
-} from "@mui/icons-material";
+import { Add, Delete, AutoAwesome } from "@mui/icons-material";
 
 export function AIDrawer() {
-  const { fetchAI, ai, mode, changeMode, toggleAIDrawer, aspect } = useEditorContext();
+  const { fetchAI, ai, mode, changeMode, toggleAIDrawer, aspect } =
+    useEditorContext();
   const { field, setUndo, setField, sdk } = useExtensionContext();
   const loading = ai.state === AIState.Loading;
   const insufficientCredits = ai.state === AIState.InsufficientCredits;
@@ -49,11 +46,16 @@ export function AIDrawer() {
     if (!field) return false;
     switch (mode) {
       case EditorMode.EditorHotspot:
-        return field.hotspots?.find((hotspot) => hotspot.id === id) !== undefined || false;
+        return (
+          field.hotspots?.find((hotspot) => hotspot.id === id) !== undefined ||
+          false
+        );
       case EditorMode.EditorGrab:
       case EditorMode.EditorPolygonRect:
       case EditorMode.EditorPolygonCircle:
-        return field.polygons?.find((poly) => poly.id === id) !== undefined || false;
+        return (
+          field.polygons?.find((poly) => poly.id === id) !== undefined || false
+        );
     }
     return false;
   };
@@ -206,16 +208,26 @@ export function AIDrawer() {
   };
 
   return (
-    <Drawer anchor="right" open={ai.drawerOpen} onClose={() => toggleAIDrawer()} className="amp-ai-drawer">
+    <Drawer
+      anchor="right"
+      open={ai.drawerOpen}
+      onClose={() => toggleAIDrawer()}
+      className="amp-ai-drawer"
+    >
       <div className="amp-drawer-title">
         <AutoAwesome /> Auto object detection
       </div>
       {insufficientCredits && (
         <>
           <Typography className="amp-ai-drawer-instructions" color={"red"}>
-            You're out of Amplience credits. You can still add an image focal point and hotspots manually.
+            You're out of Amplience credits. You can still add an image focal
+            point and hotspots manually.
             <br />
-            <Link target="_blank" href="https://amplience.com/ai-credits/" underline="none">
+            <Link
+              target="_blank"
+              href="https://amplience.com/ai-credits/"
+              underline="none"
+            >
               Top up your credits
             </Link>
           </Typography>
@@ -224,11 +236,22 @@ export function AIDrawer() {
       {shouldDisplayDetectButton() && (
         <>
           <Typography className="amp-ai-drawer-instructions">
-            Use AI Assistant to automatically detect relevant objects in your image. These can then be set as a focal point, hotspot or polygon.
+            Use AI Assistant to automatically detect relevant objects in your
+            image. These can then be set as a focal point, hotspot or polygon.
           </Typography>
           <FormControl className="amp-ai-detect-button-form">
-            <Button variant="contained" disabled={loading} onClick={() => fetchAI()}>
-              {loading && <CircularProgress className="amp-edit-toolbar__status" size={12} />}
+            <Button
+              variant="contained"
+              disabled={loading}
+              data-id="shoppable-automatically-detect"
+              onClick={() => fetchAI()}
+            >
+              {loading && (
+                <CircularProgress
+                  className="amp-edit-toolbar__status"
+                  size={12}
+                />
+              )}
               Detect objects
             </Button>
           </FormControl>
@@ -242,6 +265,7 @@ export function AIDrawer() {
             <Button
               variant="contained"
               className="amp-ai-drawer__button__large"
+              data-id="shoppable-add-all"
               onClick={() => {
                 addAll();
               }}
@@ -262,7 +286,9 @@ export function AIDrawer() {
                   <TableCell align="right">
                     <Button
                       variant="contained"
-                      className={exists(obj.id) ? "amp-ai-drawer__button__remove" : ""}
+                      className={
+                        exists(obj.id) ? "amp-ai-drawer__button__remove" : ""
+                      }
                       onClick={() => {
                         exists(obj.id) ? removeSingle(obj) : addSingle(obj);
                       }}
@@ -280,7 +306,13 @@ export function AIDrawer() {
   );
 }
 
-export function AIToolSelect({ mode, setMode }: { mode: EditorMode, setMode: (mode: EditorMode) => void }) {
+export function AIToolSelect({
+  mode,
+  setMode,
+}: {
+  mode: EditorMode;
+  setMode: (mode: EditorMode) => void;
+}) {
   return (
     <FormControl className="amp-ai-drawer__form">
       <RadioGroup
@@ -290,10 +322,34 @@ export function AIToolSelect({ mode, setMode }: { mode: EditorMode, setMode: (mo
         onChange={(evt) => setMode(Number(evt.target.value) as EditorMode)}
         value={mode}
       >
-        <FormControlLabel value={EditorMode.EditorPoi} control={<Radio />} label={<><span>Focal Point</span></>} />
-        <FormControlLabel value={EditorMode.EditorHotspot} control={<Radio />} label={<><span>Hotspot</span></>} />
-        <FormControlLabel value={EditorMode.EditorGrab} control={<Radio />} label={<><span>Polygon</span></>} />
+        <FormControlLabel
+          value={EditorMode.EditorPoi}
+          control={<Radio />}
+          label={
+            <>
+              <span>Focal Point</span>
+            </>
+          }
+        />
+        <FormControlLabel
+          value={EditorMode.EditorHotspot}
+          control={<Radio />}
+          label={
+            <>
+              <span>Hotspot</span>
+            </>
+          }
+        />
+        <FormControlLabel
+          value={EditorMode.EditorGrab}
+          control={<Radio />}
+          label={
+            <>
+              <span>Polygon</span>
+            </>
+          }
+        />
       </RadioGroup>
     </FormControl>
-  )
+  );
 }

@@ -4,7 +4,15 @@ import { EditorMode } from "../../core/EditorContext";
 import { AIState } from "../../core/AIImageData";
 import { useEditorContext } from "../../core/EditorContext";
 import { useExtensionContext } from "../../core/ExtensionContext";
-import { Menu, MenuItem, Tooltip, Button, Divider, Snackbar, Alert } from "@mui/material";
+import {
+  Menu,
+  MenuItem,
+  Tooltip,
+  Button,
+  Divider,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import {
   Undo,
   Redo,
@@ -12,13 +20,15 @@ import {
   CropSquareSharp,
   GpsFixed,
   HighlightAlt,
-  HighlightOff
+  HighlightOff,
 } from "@mui/icons-material";
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
-  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai } = useEditorContext();
-  const { undoHistory, undo, redoHistory, redo, params } = useExtensionContext();
+  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai } =
+    useEditorContext();
+  const { undoHistory, undo, redoHistory, redo, params } =
+    useExtensionContext();
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const [showError, setShowError] = React.useState(true);
   const open = anchorEl != null;
@@ -51,6 +61,7 @@ export function EditToolbar({ className }: { className?: string }) {
             <Button
               variant="contained"
               color={mode === EditorMode.EditorPoi ? "primary" : "secondary"}
+              data-id="shoppable-focal-point"
               onClick={() => {
                 changeMode(EditorMode.EditorPoi);
                 setAnchorEl(null);
@@ -68,6 +79,7 @@ export function EditToolbar({ className }: { className?: string }) {
               color={
                 mode === EditorMode.EditorHotspot ? "primary" : "secondary"
               }
+              data-id="shoppable-hotspots"
               onClick={() => {
                 changeMode(EditorMode.EditorHotspot);
                 setAnchorEl(null);
@@ -84,11 +96,12 @@ export function EditToolbar({ className }: { className?: string }) {
               variant="contained"
               color={
                 mode === EditorMode.EditorGrab ||
-                  mode === EditorMode.EditorPolygonCircle ||
-                  mode === EditorMode.EditorPolygonRect
+                mode === EditorMode.EditorPolygonCircle ||
+                mode === EditorMode.EditorPolygonRect
                   ? "primary"
                   : "secondary"
               }
+              data-id="shoppable-polygon-hotspot"
               onClick={(evt) => {
                 changeMode(EditorMode.EditorGrab);
                 setAnchorEl(evt.currentTarget);
@@ -105,6 +118,7 @@ export function EditToolbar({ className }: { className?: string }) {
                 changeMode(EditorMode.EditorPolygonRect);
                 handleClose();
               }}
+              data-id="shoppable-rectangular-hotspot"
             >
               Rectangular Hotspot
             </MenuItem>
@@ -113,6 +127,7 @@ export function EditToolbar({ className }: { className?: string }) {
                 changeMode(EditorMode.EditorPolygonCircle);
                 handleClose();
               }}
+              data-id="shoppable-circular-hotspot"
             >
               Circular Hotspot
             </MenuItem>
@@ -126,6 +141,7 @@ export function EditToolbar({ className }: { className?: string }) {
             className="amp-edit-toolbar__reset"
             disableElevation
             disabled={undoHistory.length === 0}
+            data-id="shoppable-undo"
             onClick={() => {
               if (undo) {
                 undo();
@@ -141,6 +157,7 @@ export function EditToolbar({ className }: { className?: string }) {
             className="amp-edit-toolbar__reset"
             disableElevation
             disabled={redoHistory.length === 0}
+            data-id="shoppable-redo"
             onClick={() => {
               if (redo) {
                 redo();
@@ -153,7 +170,8 @@ export function EditToolbar({ className }: { className?: string }) {
           <Divider orientation="vertical" variant="middle" flexItem />
           <Button
             variant="contained"
-            color={ ai.drawerOpen ? "primary" : "secondary" }
+            color={ai.drawerOpen ? "primary" : "secondary"}
+            data-id="shoppable-ai-assistant"
             onClick={() => {
               if (toggleAIDrawer) {
                 toggleAIDrawer();
@@ -163,32 +181,44 @@ export function EditToolbar({ className }: { className?: string }) {
           >
             AI Assistant
           </Button>
-
         </div>
       </div>
       <div className="amp-edit-toolbar__right">
         <Button
           variant="contained"
           color="primary"
+          data-id="shoppable-done"
           onClick={() => {
-              changeMode(EditorMode.Initial);
-              setDrawerVisible(false);
-              setAnchorEl(null);
-            }
-          }
+            changeMode(EditorMode.Initial);
+            setDrawerVisible(false);
+            setAnchorEl(null);
+          }}
           disableElevation
         >
           Done
         </Button>
       </div>
       {error && (
-        <Snackbar open={showError} onClose={() => { setShowError(false) }}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-          <Alert severity="error" action={
-            <Button color="inherit" size="small" onClick={() => { setShowError(false) }}>
-              OK
-            </Button>
-          }
+        <Snackbar
+          open={showError}
+          onClose={() => {
+            setShowError(false);
+          }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
+            severity="error"
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setShowError(false);
+                }}
+              >
+                OK
+              </Button>
+            }
           >
             Error fetching AI Objects
           </Alert>
