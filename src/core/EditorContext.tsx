@@ -8,6 +8,7 @@ import {
 import { AIImageData, AIState } from "./AIImageData";
 import { InsufficientCredits } from "./dal/shoppable-image/errors/InsufficientCredits";
 import { track } from "../gainsight/gainsight";
+import { useImageStudioContext } from "./ImageStudioContext";
 
 export enum EditorMode {
   Initial,
@@ -22,6 +23,7 @@ export enum EditorMode {
   // These modes don't exist, they trigger actions.
   Swap,
   Delete,
+  ImageStudio,
 }
 
 export enum MetadataSelectionType {
@@ -58,6 +60,7 @@ interface EditorState {
   setSelection(selection: MetadataSelection | undefined): void;
   ai: AIImageData;
   toggleAIDrawer(): void;
+  toggleImageStudio(): void;
   setDrawerVisible(state: boolean): void;
   fetchAI(): Promise<void>;
   clearAi(): void;
@@ -85,6 +88,7 @@ const defaultEditorState: EditorState = {
   ai: initialAiState,
   clearAi: () => {},
   setDrawerVisible: (state: boolean) => {},
+  toggleImageStudio: dummySetter,
 };
 
 const EditorContext = React.createContext(defaultEditorState);
@@ -92,6 +96,7 @@ const EditorContext = React.createContext(defaultEditorState);
 export function WithEditorContext({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(defaultEditorState);
   const { field, AIService, sdk, thumbURL } = useExtensionContext();
+  const { openImageStudio } = useImageStudioContext();
 
   useEffect(() => {
     const fetchAI = async () => {
@@ -200,6 +205,12 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
     }));
   };
 
+  const toggleImageStudio = () => {
+    if (field) {
+      openImageStudio(field);
+    }
+  };
+
   useEffect(() => {
     validateSelection();
   }, [state, field]);
@@ -267,7 +278,14 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
 
   return (
     <EditorContext.Provider
-      value={{ ...state, setAspect, changeMode, toggleAIDrawer, setSelection }}
+      value={{
+        ...state,
+        setAspect,
+        changeMode,
+        toggleAIDrawer,
+        toggleImageStudio,
+        setSelection,
+      }}
     >
       {children}
     </EditorContext.Provider>

@@ -22,12 +22,18 @@ import {
   HighlightAlt,
   HighlightOff,
 } from "@mui/icons-material";
-import ImageIcon from '@mui/icons-material/Image';
+import ImageIcon from "@mui/icons-material/Image";
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
-  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai } =
-    useEditorContext();
+  const {
+    mode,
+    toggleAIDrawer,
+    toggleImageStudio,
+    setDrawerVisible,
+    changeMode,
+    ai,
+  } = useEditorContext();
   const { undoHistory, undo, redoHistory, redo, params } =
     useExtensionContext();
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
@@ -190,12 +196,12 @@ export function EditToolbar({ className }: { className?: string }) {
               color="secondary"
               data-id="image-studio"
               onClick={() => {
+                toggleImageStudio();
               }}
             >
               <ImageIcon />
             </Button>
           </Tooltip>
-
         </div>
       </div>
       <div className="amp-edit-toolbar__right">

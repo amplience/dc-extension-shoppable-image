@@ -1,4 +1,4 @@
-import { init, ContentFieldExtension } from 'dc-extensions-sdk';
+import { init, ContentFieldExtension } from "dc-extensions-sdk";
 
 let sdk: Promise<ContentFieldExtension>;
 

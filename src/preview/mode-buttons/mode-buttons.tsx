@@ -3,18 +3,20 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ImageIcon from '@mui/icons-material/Image';
+import ImageIcon from "@mui/icons-material/Image";
 import "./mode-buttons.css";
 import Tooltip from "@mui/material/Tooltip";
 import { useExtensionContext } from "../../core/ExtensionContext";
 import { EditorMode, useEditorContext } from "../../core/EditorContext";
 import { Box, Grid, Typography } from "@mui/material";
 import { useState } from "react";
+import { useImageStudioContext } from "../../core/ImageStudioContext";
 
 export function ModeButtons() {
   const { sdk, field, setField, clearUndo, setThumbUrl } =
     useExtensionContext();
   const { mode, changeMode, clearAi, setDrawerVisible } = useEditorContext();
+  const { openImageStudio } = useImageStudioContext();
 
   const [hover, setHover] = useState(false);
 
@@ -49,6 +51,9 @@ export function ModeButtons() {
           field.polygons = [];
           clearUndo();
           setField();
+          break;
+        case EditorMode.ImageStudio:
+          openImageStudio(field);
           break;
         default:
           changeMode(mode);
@@ -85,8 +90,7 @@ export function ModeButtons() {
       {hasImage && (
         <div className="amp-mode-buttons">
           <Tooltip title="Edit in Image Studio">
-            <Fab  onClick={() => {
-              }}>
+            <Fab onClick={() => modeButton(EditorMode.ImageStudio)}>
               <ImageIcon />
             </Fab>
           </Tooltip>
