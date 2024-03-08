@@ -3,8 +3,8 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ImageIcon from "@mui/icons-material/Image";
 import "./mode-buttons.css";
+import ImageStudioIcon from "../../ic-image-studio.svg";
 import Tooltip from "@mui/material/Tooltip";
 import { useExtensionContext } from "../../core/ExtensionContext";
 import { EditorMode, useEditorContext } from "../../core/EditorContext";
@@ -91,7 +91,7 @@ export function ModeButtons() {
         <div className="amp-mode-buttons">
           <Tooltip title="Edit in Image Studio">
             <Fab onClick={() => modeButton(EditorMode.ImageStudio)}>
-              <ImageIcon />
+              <img src={ImageStudioIcon} />
             </Fab>
           </Tooltip>
           <Tooltip title="Edit image & focal point">

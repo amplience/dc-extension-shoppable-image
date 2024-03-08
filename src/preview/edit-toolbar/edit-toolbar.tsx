@@ -22,7 +22,7 @@ import {
   HighlightAlt,
   HighlightOff,
 } from "@mui/icons-material";
-import ImageIcon from "@mui/icons-material/Image";
+import ImageStudioIcon from "../../ic-image-studio-black.svg";
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
@@ -199,7 +199,7 @@ export function EditToolbar({ className }: { className?: string }) {
                 toggleImageStudio();
               }}
             >
-              <ImageIcon />
+              <img src={ImageStudioIcon} />
             </Button>
           </Tooltip>
         </div>

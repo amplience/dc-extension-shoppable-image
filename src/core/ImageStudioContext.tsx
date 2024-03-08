@@ -198,7 +198,6 @@ export function WithImageStudioContext({
   }, []);
 
   const openImageStudio = async (shoppableImage: ShoppableImageData) => {
-    console.log("openImageStudio", shoppableImage);
     const srcAsset = await sdkInstance?.assets.getById(shoppableImage.image.id);
 
     // Submit the image to the active window
