@@ -22,6 +22,7 @@ import {
   HighlightAlt,
   HighlightOff,
 } from "@mui/icons-material";
+import ImageIcon from '@mui/icons-material/Image';
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
@@ -181,6 +182,20 @@ export function EditToolbar({ className }: { className?: string }) {
           >
             AI Assistant
           </Button>
+
+          <Divider orientation="vertical" variant="middle" flexItem />
+          <Tooltip title="Edit in Image Studio">
+            <Button
+              variant="contained"
+              color="secondary"
+              data-id="image-studio"
+              onClick={() => {
+              }}
+            >
+              <ImageIcon />
+            </Button>
+          </Tooltip>
+
         </div>
       </div>
       <div className="amp-edit-toolbar__right">
