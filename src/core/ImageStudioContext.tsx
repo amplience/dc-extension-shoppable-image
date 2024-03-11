@@ -106,7 +106,16 @@ export function WithImageStudioContext({
     if (!returnedImageUrl || !sdkInstance || !imageInfo) {
       return;
     }
-    const assetUploadService = new AssetUploadService(sdkInstance);
+
+    const params: any = {
+      ...sdkInstance.params.installation,
+      ...sdkInstance.params.instance,
+    };
+
+    const assetUploadService = new AssetUploadService(
+      sdkInstance,
+      params.mediaAssets?.basePath
+    );
     assetUploadService
       .uploadToAssetStore(returnedImageUrl, imageInfo)
       .then((uploadedAsset: Asset) => {

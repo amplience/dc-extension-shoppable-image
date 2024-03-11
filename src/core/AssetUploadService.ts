@@ -63,9 +63,13 @@ export const imageMimeTypeToExtension = (
 };
 
 export class AssetUploadService {
+  private basePath: string;
   constructor(
-    private readonly sdk: ContentFieldExtension<FieldModel, Parameters>
-  ) {}
+    private readonly sdk: ContentFieldExtension<FieldModel, Parameters>,
+    basePath: string = "https://api.amplience-qa.net/v2/content/media/assets"
+  ) {
+    this.basePath = basePath;
+  }
 
   async uploadToAssetStore(url: string, imageInfo: ImageInfo): Promise<Asset> {
     try {
@@ -110,7 +114,7 @@ export class AssetUploadService {
       };
 
       const sendAsset = await this.sdk.client.request({
-        url: "https://api.amplience-qa.net/v2/content/media/assets",
+        url: this.basePath,
         method: "PUT" as HttpMethod.PUT,
         data: JSON.stringify(payload),
       });
