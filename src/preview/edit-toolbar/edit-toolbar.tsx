@@ -21,14 +21,24 @@ import {
   GpsFixed,
   HighlightAlt,
   HighlightOff,
+  SwapHoriz,
 } from "@mui/icons-material";
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
   const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai } =
     useEditorContext();
-  const { undoHistory, undo, redoHistory, redo, params } =
-    useExtensionContext();
+  const {
+    undoHistory,
+    undo,
+    redoHistory,
+    redo,
+    setThumbUrl,
+    sdk,
+    field,
+    setField,
+    clearUndo,
+  } = useExtensionContext();
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const [showError, setShowError] = React.useState(true);
   const open = anchorEl != null;
@@ -47,6 +57,22 @@ export function EditToolbar({ className }: { className?: string }) {
       default:
         return <HighlightAlt className="amp-edit-toolbar__modeicon" />;
     }
+  };
+
+  const swapImage = async () => {
+    const image = await sdk!.mediaLink.getImage();
+    const asset = await sdk!.assets.getById(image.id);
+
+    setThumbUrl(asset.thumbURL);
+
+    field!.image = image;
+    field!.poi = {} as any;
+    field!.hotspots = [];
+    field!.polygons = [];
+
+    clearUndo!();
+    setField!();
+    changeMode(EditorMode.EditorPoi);
   };
 
   return (
@@ -184,6 +210,21 @@ export function EditToolbar({ className }: { className?: string }) {
         </div>
       </div>
       <div className="amp-edit-toolbar__right">
+        <Tooltip title="Replace image">
+          <Button
+            variant="contained"
+            color="secondary"
+            data-id="change-image"
+            style={{
+              minWidth: "auto",
+              paddingLeft: "5px",
+              paddingRight: "5px",
+            }}
+            onClick={swapImage}
+          >
+            <SwapHoriz />
+          </Button>
+        </Tooltip>
         <Button
           variant="contained"
           color="primary"
