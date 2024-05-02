@@ -57,7 +57,7 @@ export function EditToolbar({ className }: { className?: string }) {
     >
       <div className="amp-edit-toolbar__modescroll">
         <div className="amp-edit-toolbar__modes">
-          <Tooltip title="Click to reposition the Focal Point.">
+          <Tooltip title="Place or reposition the focal point">
             <Button
               variant="contained"
               color={mode === EditorMode.EditorPoi ? "primary" : "secondary"}
@@ -73,7 +73,7 @@ export function EditToolbar({ className }: { className?: string }) {
             </Button>
           </Tooltip>
 
-          <Tooltip title="Click to place a new Hotspot, or drag an existing one.">
+          <Tooltip title="Place or reposition a hotspot">
             <Button
               variant="contained"
               color={
@@ -91,7 +91,7 @@ export function EditToolbar({ className }: { className?: string }) {
             </Button>
           </Tooltip>
 
-          <Tooltip title="Click to place a new Polygon Hotspot, or drag an existing one.">
+          <Tooltip title="Place or reposition a polygon hotspot">
             <Button
               variant="contained"
               color={
