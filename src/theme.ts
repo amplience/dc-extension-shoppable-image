@@ -19,23 +19,39 @@ export const theme = createTheme({
   components: {
     MuiButton: {
       defaultProps: {
-        disableElevation: true
+        disableElevation: true,
       },
       styleOverrides: {
         root: {
-          textTransform: 'none'
-        }
-      }
+          textTransform: "none",
+        },
+      },
     },
     MuiFab: {
       styleOverrides: {
         root: {
-          color: 'white',
-          '&:hover': {
-            backgroundColor: primaryBlue
-          }
-        }
-      }
+          color: "white",
+          "&:hover": {
+            backgroundColor: primaryBlue,
+          },
+        },
+      },
+    },
+    MuiTooltip: {
+      defaultProps: {
+        arrow: true,
+      },
+      styleOverrides: {
+        arrow: {
+          color: "#1A222D",
+        },
+        tooltipArrow: {
+          borderRadius: "2px",
+          padding: "6px 12px 6px 12px",
+          backgroundColor: "#1A222D",
+          textAlign: "center",
+        },
+      },
     },
   },
 });
