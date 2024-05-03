@@ -103,10 +103,9 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
       const imageHost = sdk?.stagingEnvironment || field?.image.defaultHost;
       if (
         AIService &&
-        field &&
         imageHost &&
-        field.image.endpoint &&
-        field.image.name
+        field?.image?.endpoint &&
+        field.image?.name
       ) {
         const imageUrl = sdk?.stagingEnvironment
           ? `https://${imageHost}/i/${
@@ -179,7 +178,7 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
       clearAi: clearAi,
       setDrawerVisible,
     }));
-  }, [field?.image, AIService, sdk]);
+  }, [field?.image, thumbURL, AIService, sdk]);
 
   const setAspect = (aspect: { x: number; y: number }) => {
     setState((prevState) => ({ ...prevState, aspect }));

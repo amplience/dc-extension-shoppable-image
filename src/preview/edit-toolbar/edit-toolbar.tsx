@@ -26,7 +26,7 @@ import {
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
-  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai } =
+  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai, clearAi } =
     useEditorContext();
   const {
     undoHistory,
@@ -71,6 +71,7 @@ export function EditToolbar({ className }: { className?: string }) {
     field!.polygons = [];
 
     clearUndo!();
+    clearAi();
     setField!();
     changeMode(EditorMode.EditorPoi);
   };

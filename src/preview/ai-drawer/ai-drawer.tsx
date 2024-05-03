@@ -2,7 +2,6 @@ import "./ai-drawer.css";
 import { useEditorContext, EditorMode } from "../../core/EditorContext";
 import { useExtensionContext } from "../../core/ExtensionContext";
 import { AIState, ObjectData } from "../../core/AIImageData";
-import React, { useState } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -17,8 +16,6 @@ import {
   TableRow,
   Typography,
   CircularProgress,
-  Alert,
-  AlertTitle,
   Link,
 } from "@mui/material";
 import { Add, Delete, AutoAwesome } from "@mui/icons-material";
@@ -26,7 +23,7 @@ import { Add, Delete, AutoAwesome } from "@mui/icons-material";
 export function AIDrawer() {
   const { fetchAI, ai, mode, changeMode, toggleAIDrawer, aspect } =
     useEditorContext();
-  const { field, setUndo, setField, sdk } = useExtensionContext();
+  const { field, setUndo, setField } = useExtensionContext();
   const loading = ai.state === AIState.Loading;
   const insufficientCredits = ai.state === AIState.InsufficientCredits;
 
@@ -42,20 +39,18 @@ export function AIDrawer() {
     }
   };
 
+  const hotspotExists = (hotspotId: string, hotspots?: { id: string }[]) =>
+    Boolean(hotspots?.find(({ id }) => id === hotspotId));
+
   const exists = (id: string): boolean => {
     if (!field) return false;
     switch (mode) {
       case EditorMode.EditorHotspot:
-        return (
-          field.hotspots?.find((hotspot) => hotspot.id === id) !== undefined ||
-          false
-        );
+        return hotspotExists(id, field.hotspots);
       case EditorMode.EditorGrab:
       case EditorMode.EditorPolygonRect:
       case EditorMode.EditorPolygonCircle:
-        return (
-          field.polygons?.find((poly) => poly.id === id) !== undefined || false
-        );
+        return hotspotExists(id, field.polygons);
     }
     return false;
   };
@@ -81,7 +76,7 @@ export function AIDrawer() {
       case EditorMode.EditorPoi:
         setFocalPoint(obj);
     }
-    setField && setField();
+    setField!();
   };
 
   const removeSingle = (obj: ObjectData) => {
@@ -96,23 +91,23 @@ export function AIDrawer() {
         removePolygon(obj);
         break;
     }
-    setField && setField();
+    setField!();
   };
 
   const removeHotspot = ({ id }: ObjectData) => {
-    if (!field) return;
-    if (!field.hotspots) return;
-    const index = field.hotspots.findIndex((hotspot) => hotspot.id === id);
-    if (index === -1) return;
-    field.hotspots.splice(index, 1);
+    const noHotspots = !field?.hotspots;
+
+    if (noHotspots) return;
+
+    field.hotspots = field.hotspots?.filter((hotspot) => hotspot.id !== id);
   };
 
   const removePolygon = ({ id }: ObjectData) => {
-    if (!field) return;
-    if (!field.polygons) return;
-    const index = field.polygons.findIndex((poly) => poly.id === id);
-    if (index === -1) return;
-    field.polygons.splice(index, 1);
+    const noPolygons = !field?.polygons;
+
+    if (noPolygons) return;
+
+    field.polygons = field.polygons?.filter((polygon) => polygon.id !== id);
   };
 
   const addHotspot = ({ id, center, target, selector }: ObjectData) => {
@@ -244,7 +239,7 @@ export function AIDrawer() {
               variant="contained"
               disabled={loading}
               data-id="shoppable-automatically-detect"
-              onClick={() => fetchAI()}
+              onClick={fetchAI}
             >
               {loading && (
                 <CircularProgress
