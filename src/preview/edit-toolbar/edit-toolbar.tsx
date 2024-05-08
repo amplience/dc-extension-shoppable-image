@@ -244,6 +244,7 @@ export function EditToolbar({ className }: { className?: string }) {
             setAnchorEl(null);
           }}
           disableElevation
+          disabled={uiDisabled}
         >
           Done
         </Button>
