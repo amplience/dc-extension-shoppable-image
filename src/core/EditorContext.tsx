@@ -61,6 +61,8 @@ interface EditorState {
   setDrawerVisible(state: boolean): void;
   fetchAI(): Promise<void>;
   clearAi(): void;
+  uiDisabled: boolean;
+  setUiDisabled(disabled: boolean): void;
 }
 
 const dummySetter = () => {
@@ -85,12 +87,16 @@ const defaultEditorState: EditorState = {
   ai: initialAiState,
   clearAi: () => {},
   setDrawerVisible: (state: boolean) => {},
+  setUiDisabled: (state: boolean) => {},
+  uiDisabled: false,
 };
 
 const EditorContext = React.createContext(defaultEditorState);
 
 export function WithEditorContext({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(defaultEditorState);
+  const [uiDisabled, setUiDisabled] = useState(false);
+
   const { field, AIService, sdk, thumbURL } = useExtensionContext();
 
   useEffect(() => {
@@ -103,10 +109,9 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
       const imageHost = sdk?.stagingEnvironment || field?.image.defaultHost;
       if (
         AIService &&
-        field &&
         imageHost &&
-        field.image.endpoint &&
-        field.image.name
+        field?.image?.endpoint &&
+        field.image?.name
       ) {
         const imageUrl = sdk?.stagingEnvironment
           ? `https://${imageHost}/i/${
@@ -118,6 +123,7 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
           ai: { ...prevState.ai, state: AIState.Loading },
         }));
         try {
+          setUiDisabled(true);
           const objects = await AIService.get(imageUrl, true);
           track(window, "AI Credits used", {
             name: "dc-extension-shoppable-image-ai",
@@ -155,6 +161,8 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
             ...prevState,
             ai: { ...prevState.ai, state },
           }));
+        } finally {
+          setUiDisabled(false);
         }
       }
     };
@@ -179,7 +187,7 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
       clearAi: clearAi,
       setDrawerVisible,
     }));
-  }, [field?.image, AIService, sdk]);
+  }, [field?.image, thumbURL, AIService, sdk]);
 
   const setAspect = (aspect: { x: number; y: number }) => {
     setState((prevState) => ({ ...prevState, aspect }));
@@ -267,7 +275,15 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
 
   return (
     <EditorContext.Provider
-      value={{ ...state, setAspect, changeMode, toggleAIDrawer, setSelection }}
+      value={{
+        ...state,
+        setAspect,
+        changeMode,
+        toggleAIDrawer,
+        setSelection,
+        uiDisabled,
+        setUiDisabled,
+      }}
     >
       {children}
     </EditorContext.Provider>
