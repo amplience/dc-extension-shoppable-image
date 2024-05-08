@@ -26,8 +26,15 @@ import {
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
-  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai, clearAi } =
-    useEditorContext();
+  const {
+    mode,
+    toggleAIDrawer,
+    setDrawerVisible,
+    changeMode,
+    ai,
+    clearAi,
+    uiDisabled,
+  } = useEditorContext();
   const {
     undoHistory,
     undo,
@@ -221,6 +228,7 @@ export function EditToolbar({ className }: { className?: string }) {
               paddingLeft: "5px",
               paddingRight: "5px",
             }}
+            disabled={uiDisabled}
             onClick={swapImage}
           >
             <SwapHoriz />
