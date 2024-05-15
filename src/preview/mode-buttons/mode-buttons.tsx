@@ -7,7 +7,7 @@ import "./mode-buttons.css";
 import Tooltip from "@mui/material/Tooltip";
 import { useExtensionContext } from "../../core/ExtensionContext";
 import { EditorMode, useEditorContext } from "../../core/EditorContext";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useState } from "react";
 
 export function ModeButtons() {
@@ -15,7 +15,7 @@ export function ModeButtons() {
     useExtensionContext();
   const { mode, changeMode, clearAi, setDrawerVisible } = useEditorContext();
 
-  const [hover, setHover] = useState(false);
+  const [, setHover] = useState(false);
 
   const handleMouseEnter = () => setHover(true);
   const handleMouseLeave = () => setHover(false);

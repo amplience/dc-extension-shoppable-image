@@ -21,14 +21,31 @@ import {
   GpsFixed,
   HighlightAlt,
   HighlightOff,
+  SwapHoriz,
 } from "@mui/icons-material";
 import React from "react";
 
 export function EditToolbar({ className }: { className?: string }) {
-  const { mode, toggleAIDrawer, setDrawerVisible, changeMode, ai } =
-    useEditorContext();
-  const { undoHistory, undo, redoHistory, redo, params } =
-    useExtensionContext();
+  const {
+    mode,
+    toggleAIDrawer,
+    setDrawerVisible,
+    changeMode,
+    ai,
+    clearAi,
+    uiDisabled,
+  } = useEditorContext();
+  const {
+    undoHistory,
+    undo,
+    redoHistory,
+    redo,
+    setThumbUrl,
+    sdk,
+    field,
+    setField,
+    clearUndo,
+  } = useExtensionContext();
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const [showError, setShowError] = React.useState(true);
   const open = anchorEl != null;
@@ -49,6 +66,23 @@ export function EditToolbar({ className }: { className?: string }) {
     }
   };
 
+  const swapImage = async () => {
+    const image = await sdk!.mediaLink.getImage();
+    const asset = await sdk!.assets.getById(image.id);
+
+    setThumbUrl(asset.thumbURL);
+
+    field!.image = image;
+    field!.poi = {} as any;
+    field!.hotspots = [];
+    field!.polygons = [];
+
+    clearUndo!();
+    clearAi();
+    setField!();
+    changeMode(EditorMode.EditorPoi);
+  };
+
   return (
     <div
       className={clsx("amp-edit-toolbar", className, {
@@ -57,7 +91,7 @@ export function EditToolbar({ className }: { className?: string }) {
     >
       <div className="amp-edit-toolbar__modescroll">
         <div className="amp-edit-toolbar__modes">
-          <Tooltip title="Click to reposition the Focal Point.">
+          <Tooltip title="Place or reposition the focal point">
             <Button
               variant="contained"
               color={mode === EditorMode.EditorPoi ? "primary" : "secondary"}
@@ -73,7 +107,7 @@ export function EditToolbar({ className }: { className?: string }) {
             </Button>
           </Tooltip>
 
-          <Tooltip title="Click to place a new Hotspot, or drag an existing one.">
+          <Tooltip title="Place or reposition a hotspot">
             <Button
               variant="contained"
               color={
@@ -91,7 +125,7 @@ export function EditToolbar({ className }: { className?: string }) {
             </Button>
           </Tooltip>
 
-          <Tooltip title="Click to place a new Polygon Hotspot, or drag an existing one.">
+          <Tooltip title="Place or reposition a polygon hotspot">
             <Button
               variant="contained"
               color={
@@ -135,55 +169,77 @@ export function EditToolbar({ className }: { className?: string }) {
 
           <Divider orientation="vertical" variant="middle" flexItem />
 
-          <Button
-            variant="contained"
-            color="secondary"
-            className="amp-edit-toolbar__reset"
-            disableElevation
-            disabled={undoHistory.length === 0}
-            data-id="shoppable-undo"
-            onClick={() => {
-              if (undo) {
-                undo();
-              }
-            }}
-          >
-            <Undo />
-          </Button>
+          <Tooltip title="Undo">
+            <Button
+              variant="contained"
+              color="secondary"
+              className="amp-edit-toolbar__reset"
+              disableElevation
+              disabled={undoHistory.length === 0}
+              data-id="shoppable-undo"
+              onClick={() => {
+                if (undo) {
+                  undo();
+                }
+              }}
+            >
+              <Undo />
+            </Button>
+          </Tooltip>
 
-          <Button
-            variant="contained"
-            color="secondary"
-            className="amp-edit-toolbar__reset"
-            disableElevation
-            disabled={redoHistory.length === 0}
-            data-id="shoppable-redo"
-            onClick={() => {
-              if (redo) {
-                redo();
-              }
-            }}
-          >
-            <Redo />
-          </Button>
+          <Tooltip title="Redo">
+            <Button
+              variant="contained"
+              color="secondary"
+              className="amp-edit-toolbar__reset"
+              disableElevation
+              disabled={redoHistory.length === 0}
+              data-id="shoppable-redo"
+              onClick={() => {
+                if (redo) {
+                  redo();
+                }
+              }}
+            >
+              <Redo />
+            </Button>
+          </Tooltip>
 
           <Divider orientation="vertical" variant="middle" flexItem />
-          <Button
-            variant="contained"
-            color={ai.drawerOpen ? "primary" : "secondary"}
-            data-id="shoppable-ai-assistant"
-            onClick={() => {
-              if (toggleAIDrawer) {
-                toggleAIDrawer();
-              }
-              setAnchorEl(null);
-            }}
-          >
-            AI Assistant
-          </Button>
+          <Tooltip title="Use AI Assistant to automatically detect relevant objects in your image">
+            <Button
+              variant="contained"
+              color={ai.drawerOpen ? "primary" : "secondary"}
+              data-id="shoppable-ai-assistant"
+              onClick={() => {
+                if (toggleAIDrawer) {
+                  toggleAIDrawer();
+                }
+                setAnchorEl(null);
+              }}
+            >
+              AI Assistant
+            </Button>
+          </Tooltip>
         </div>
       </div>
       <div className="amp-edit-toolbar__right">
+        <Tooltip title="Replace image">
+          <Button
+            variant="contained"
+            color="secondary"
+            data-id="change-image"
+            style={{
+              minWidth: "auto",
+              paddingLeft: "5px",
+              paddingRight: "5px",
+            }}
+            disabled={uiDisabled}
+            onClick={swapImage}
+          >
+            <SwapHoriz />
+          </Button>
+        </Tooltip>
         <Button
           variant="contained"
           color="primary"
@@ -194,6 +250,7 @@ export function EditToolbar({ className }: { className?: string }) {
             setAnchorEl(null);
           }}
           disableElevation
+          disabled={uiDisabled}
         >
           Done
         </Button>
