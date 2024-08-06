@@ -27,7 +27,7 @@ export interface ShoppableImagePolygon {
 }
 
 export interface ShoppableImageData {
-  image: MediaImageLink;
+  image: MediaImageLink | undefined;
   poi?: ShoppableImagePoi;
   hotspots?: ShoppableImageHotspot[];
   polygons?: ShoppableImagePolygon[];

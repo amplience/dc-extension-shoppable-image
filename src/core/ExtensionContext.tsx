@@ -51,13 +51,12 @@ export function WithExtensionContext({
         };
         const schema = sdk.field.schema;
         const formValue = (await sdk.field.getValue()) as ShoppableImageData;
-        const hasImage = !(formValue as { image: { _empty?: boolean } }).image
-          ?._empty;
+        let hasImage = !!formValue?.image?.id;
         const asset = hasImage
-          ? await sdk.assets.getById(formValue.image.id)
+          ? await sdk.assets.getById(formValue?.image?.id || '')
           : {};
         const thumbURL = asset.thumbURL;
-        const field = formValue;
+        const field = formValue || {};
         const undoHistory: ShoppableImageData[] = [];
         const redoHistory: ShoppableImageData[] = [];
         const AIService = new AIRequestService(sdk, params?.ai?.basePath || "");

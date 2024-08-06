@@ -208,7 +208,7 @@ export function VisPage({
 
   let image: JSX.Element | undefined;
   let src = "invalid";
-  if (field && field.image.id) {
+  if (field && field?.image?.id) {
     src = vse
       ? `https://${vse}/i/${field.image.endpoint}/${encodeURIComponent(
           field.image.name
