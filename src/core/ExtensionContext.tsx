@@ -52,8 +52,9 @@ export function WithExtensionContext({
         const schema = sdk.field.schema;
         const formValue = (await sdk.field.getValue()) as ShoppableImageData;
         let hasImage = !!formValue?.image?.id;
-        const asset = hasImage
-          ? await sdk.assets.getById(formValue?.image?.id || '')
+        const assetId = formValue?.image?.id;
+        const asset = hasImage && assetId
+          ? await sdk.assets.getById(assetId)
           : {};
         const thumbURL = asset.thumbURL;
         const field = formValue || {};
