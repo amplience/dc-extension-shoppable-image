@@ -673,7 +673,7 @@ export function PreviewCanvas() {
 
   let image: JSX.Element | undefined;
   let src = "invalid";
-  if (field && field.image.id) {
+  if (field && field?.image?.id) {
     src = sdk?.stagingEnvironment
       ? `https://${sdk.stagingEnvironment}/i/${
           field.image.endpoint
