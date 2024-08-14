@@ -21,7 +21,7 @@ export function ModeButtons() {
   const handleMouseLeave = () => setHover(false);
 
   const showButtons = mode === EditorMode.Initial;
-  const hasImage = field && field.image.id;
+  const hasImage = field && field?.image?.id;
 
   const modeButton = async (mode: EditorMode): Promise<void> => {
     if (sdk && field && setField && clearUndo) {
@@ -42,7 +42,7 @@ export function ModeButtons() {
           changeMode(EditorMode.EditorPoi);
           break;
         case EditorMode.Delete:
-          field.image = { _empty: true } as any;
+          field.image = undefined;
           field.poi = {} as any;
           field.hotspots = [];
           field.polygons = [];

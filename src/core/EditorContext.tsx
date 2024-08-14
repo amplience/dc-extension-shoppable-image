@@ -106,7 +106,7 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
         category: "Extension",
       });
 
-      const imageHost = sdk?.stagingEnvironment || field?.image.defaultHost;
+      const imageHost = sdk?.stagingEnvironment || field?.image?.defaultHost;
       if (
         AIService &&
         imageHost &&
