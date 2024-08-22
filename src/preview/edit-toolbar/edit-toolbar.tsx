@@ -25,10 +25,13 @@ import {
 } from "@mui/icons-material";
 import React from "react";
 
+import ImageStudioIcon from "../../icons/ic-image-studio-black.svg";
+
 export function EditToolbar({ className }: { className?: string }) {
   const {
     mode,
     toggleAIDrawer,
+    toggleImageStudio,
     setDrawerVisible,
     changeMode,
     ai,
@@ -219,6 +222,20 @@ export function EditToolbar({ className }: { className?: string }) {
               }}
             >
               AI Assistant
+            </Button>
+          </Tooltip>
+
+          <Divider orientation="vertical" variant="middle" flexItem />
+          <Tooltip title="Edit in Image Studio">
+            <Button
+              variant="contained"
+              color="secondary"
+              data-id="image-studio"
+              onClick={() => {
+                toggleImageStudio();
+              }}
+            >
+              <img src={ImageStudioIcon} alt="Edit in Image Studio icon" />
             </Button>
           </Tooltip>
         </div>
