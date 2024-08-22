@@ -7,6 +7,10 @@
   position: relative;
 }
 
+.amp-preview-canvas--hide {
+  display: none;
+}
+
 .amp-preview-canvas-progress {
   height: 458px;
   display: flex;
@@ -34,7 +38,7 @@
 
 .amp-preview-canvas__focalpoint {
   position: absolute;
-  border: 1px dashed rgba(255, 255, 255, 0.75);;
+  border: 1px dashed rgba(255, 255, 255, 0.75);
   background-color: rgba(0, 41, 131, 0.33);
   transition: opacity 0.33s;
   display: flex;
