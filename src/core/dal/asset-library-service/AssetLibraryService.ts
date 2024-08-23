@@ -94,7 +94,10 @@ export class AssetLibraryService {
     }
   }
 
-  createImageLinkFromAsset(img: MediaImageLink, asset: Asset): MediaImageLink {
+  createImageLinkFromAsset(
+    img: MediaImageLink,
+    asset: Asset
+  ): MediaImageLink & { mimeType: string } {
     return {
       _meta: {
         schema: img._meta.schema,
@@ -103,6 +106,7 @@ export class AssetLibraryService {
       name: asset.name,
       endpoint: img.endpoint,
       defaultHost: img.defaultHost,
+      mimeType: asset.mimeType,
     };
   }
 
