@@ -707,16 +707,12 @@ export function PreviewCanvas() {
 
   return (
     <div>
-      {image && !loaded && (
-        <div className="amp-preview-canvas-progress">
-          <CircularProgress />
-        </div>
-      )}
-      <div
-        className={`amp-preview-canvas ${
-          loaded ? "" : "amp-preview-canvas--hide"
-        }`}
-      >
+      <div className="amp-preview-canvas">
+        {image && !loaded && (
+          <div className="amp-preview-canvas-progress">
+            <CircularProgress />
+          </div>
+        )}
         {image || false}
         {canvas || false}
         <ModeButtons />

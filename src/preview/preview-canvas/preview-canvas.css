@@ -7,11 +7,9 @@
   position: relative;
 }
 
-.amp-preview-canvas--hide {
-  display: none;
-}
-
 .amp-preview-canvas-progress {
+  position: absolute;
+  width: 100%;
   height: 458px;
   display: flex;
   justify-content: center;
