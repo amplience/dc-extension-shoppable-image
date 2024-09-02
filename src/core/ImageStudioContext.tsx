@@ -44,12 +44,12 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
         baseUrl: params?.imageStudio?.basePath || IMAGE_STUDIO_BASEPATH,
       });
 
-      const studioResponse = await imageStudioSdk.launch({
-        image: {
+      const studioResponse = await imageStudioSdk.editImages([
+        {
           url: srcImage.thumbURL,
           name: srcImage.name,
         },
-      });
+      ]);
 
       if (studioResponse?.image) {
         const uploadedAsset = await assetLibraryService.uploadAsset(
