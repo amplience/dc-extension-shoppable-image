@@ -6,7 +6,7 @@ This document will explain what each of the fields in the partial maps to, and h
 
 ![Example of an image enriched with the Shoppable Image Extension](../media/format-example.png)
 
-In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a point of interest centered on the camera, and there is a hotspot placed on top of a watch.
+In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a point of interest centered on the model, and there is a hotspot placed on top the bag and trousers.
 
 Here is the JSON for this Shoppable Image:
 
@@ -19,7 +19,7 @@ Here is the JSON for this Shoppable Image:
       },
       "id": "b82e697a-0c8d-4270-9241-58ce6b53948c",
       "name": "hipster-bag",
-      "endpoint": "csdemo",
+      "endpoint": "demo",
       "defaultHost": "cdn.media.amplience.net"
     },
     "poi": {
@@ -28,11 +28,20 @@ Here is the JSON for this Shoppable Image:
       "w": 0.09999999999999999,
       "h": 0.15
     },
-    "hotspots":[
+    "hotspots": [
       {
         "id": "4b70802c-0499-4c6f-aa27-1e4ff0b125cb",
-        "target": "Watch",
-        "selector": ".watch",
+        "target": "bde9abf4-c888-470f-85fa-453669351e01",
+        "selector": ".product",
+        "points": {
+          "x": 0.5647743813682679,
+          "y": 0.8384279475982532
+        }
+      },
+      {
+        "id": "4b70802c-0499-4c6f-aa27-1e4ff0b125cb",
+        "target": "women-clothing-trouser",
+        "selector": ".category",
         "points": {
           "x": 0.5647743813682679,
           "y": 0.8384279475982532
@@ -42,8 +51,8 @@ Here is the JSON for this Shoppable Image:
     "polygons": [
       {
         "id": "744a00b9-0b21-47b5-800e-789911e0ad9a",
-        "target": "Shirt",
-        "selector": ".Shirt",
+        "target": "women-shoes",
+        "selector": ".category",
         "points": [
           {
             "x": 0.11062590975254731,
@@ -65,8 +74,8 @@ Here is the JSON for this Shoppable Image:
       },
       {
         "id": "6264b28f-0db9-4caf-b4d5-900bfb140d1a",
-        "target": "Fabric",
-        "selector": ".fabric",
+        "target": "content/onsale",
+        "selector": ".deliveryKey",
         "points": [
           {
             "x": 0.4735225618631732,
@@ -115,29 +124,6 @@ Here is the JSON for this Shoppable Image:
           {
             "x": 0.41657933042212547,
             "y": 0.4127074235807857
-          }
-        ]
-      },
-      {
-        "id": "5678248d-6ad5-40c7-bb20-a68e9f3f1312",
-        "target": "Bag",
-        "selector": ".bag",
-        "points": [
-          {
-            "x": 0.6506550218340611,
-            "y": 0.10043668122270744
-          },
-          {
-            "x": 0.9068413391557496,
-            "y": 0.10043668122270744
-          },
-          {
-            "x": 0.9068413391557496,
-            "y": 0.4781659388646288
-          },
-          {
-            "x": 0.6506550218340611,
-            "y": 0.4781659388646288
           }
         ]
       }
@@ -155,12 +141,14 @@ https://{{image.defaultHost}}/i/{{image.endpoint}}/{{image.name}}
 The `poi` field represents a point of interest - an anchor point for the image to be centered around when cropping. The point of interest is technically a rectangle; it contains `x` and `y` positions, as well as width `w` and height `h`. The point is considered in the center of the rectangle.
 
 The `hotspots` field is an array of hotspot objects:
+
 - `id`: GUID for the hotspot. Can be used to uniquely identify the hotspot.
 - `target`: Target string. It's up to the user what this means.
 - `selector`: Selector string. It's up to the user what this means.
 - `points`: An object containing a single point for the hotspot. `x` and `y` contain the x and y postions, respectively.
 
 The `polygons` field is an array of polygon objects:
+
 - `id`: GUID for the polygon. Can be used to uniquely identify the polygon.
 - `target`: Target string. It's up to the user what this means.
 - `selector`: Selector string. It's up to the user what this means.
@@ -191,7 +179,10 @@ const poiX = (field.poi.x + field.poi.w / 2 - 0.5) * imageWidth;
 // This will bound how much the image can be moved in that axis.
 const maxDist = (imageWidth - targetWidth) / 2;
 
-offsetTransform = `translate(${Math.min(maxDist, Math.max(-poiX, -maxDist))}px, 0)`;
+offsetTransform = `translate(${Math.min(
+  maxDist,
+  Math.max(-poiX, -maxDist)
+)}px, 0)`;
 ```
 
 When uncropped on the y-axis, the css for the contained image is `height: 100%; maxWidth: none;`, and it's centered using flex. If uncropped on the other axis, simply swap all X for Y and width for height in the above examples. If using an interactive canvas on top, set its size to that of the image (scaled by its constrained axis) and also have it placed in the middle to float over it.
