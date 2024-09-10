@@ -674,11 +674,7 @@ export function PreviewCanvas() {
   let image: JSX.Element | undefined;
   let src = "invalid";
   if (field && field?.image?.id) {
-    src = sdk?.stagingEnvironment
-      ? `https://${sdk.stagingEnvironment}/i/${
-          field.image.endpoint
-        }/${encodeURIComponent(field.image.name)}`
-      : thumbURL;
+    src = thumbURL;
 
     image = (
       <img

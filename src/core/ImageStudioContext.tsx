@@ -54,8 +54,7 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
 
       if (studioResponse?.image) {
         const uploadedAsset = await assetLibraryService.uploadAsset(
-          studioResponse.image.url,
-          studioResponse.image.name,
+          studioResponse.image,
           srcImage
         );
         const imageLink = assetLibraryService.createImageLinkFromAsset(

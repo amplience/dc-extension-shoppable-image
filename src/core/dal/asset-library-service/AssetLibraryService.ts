@@ -3,6 +3,7 @@ import { HttpMethod } from "dc-extensions-sdk/dist/types/lib/components/HttpClie
 import { MediaImageLink } from "dc-extensions-sdk/dist/types/lib/components/MediaLink";
 import { AssetPutPayload } from "./types/AssetPutPayload";
 import { Asset } from "./types/Asset";
+import { mimeTypeToFileExtension, SDKImage } from "@amplience/image-studio-sdk";
 
 export class AssetLibraryService {
   private basePath: string;
@@ -19,18 +20,6 @@ export class AssetLibraryService {
       throw new Error("Asset does not exist");
     }
     return uploadedAsset;
-  }
-
-  async getAssetContentType(url: string) {
-    const { status, headers } = await fetch(url, {
-      method: "HEAD",
-    });
-
-    if (status !== 200 || !headers.has("Content-Type")) {
-      throw new Error("Unable to determine image Content-Type");
-    }
-
-    return headers.get("Content-Type");
   }
 
   async putAsset(payload: AssetPutPayload) {
@@ -52,8 +41,7 @@ export class AssetLibraryService {
   }
 
   async uploadAsset(
-    url: string,
-    name: string,
+    studioAsset: SDKImage,
     srcAsset: Asset
   ): Promise<Asset> {
     try {
@@ -61,8 +49,7 @@ export class AssetLibraryService {
         throw new Error("User has no HubId");
       }
 
-      const contentType = await this.getAssetContentType(url);
-      const fileExtension = this.imageMimeTypeToExtension(contentType);
+      const fileExtension = mimeTypeToFileExtension(studioAsset.mimeType);
 
       if (!fileExtension) {
         throw new Error("Unable to determine image file extension");
@@ -70,13 +57,13 @@ export class AssetLibraryService {
 
       const assetPutResponse = await this.putAsset({
         hubId: this.sdk.hub.id,
-        mode: "renameUnique",
+        mode: "overwrite",
         assets: [
           {
-            src: url,
-            name,
-            srcName: `${name}.${fileExtension}`,
-            label: `${name}.${fileExtension}`,
+            src: studioAsset.url,
+            name: studioAsset.name,
+            srcName: `${studioAsset.name}.${fileExtension}`,
+            label: `${studioAsset.name}.${fileExtension}`,
             folderID: srcAsset.folderID,
             bucketID: srcAsset.bucketID,
           },
@@ -108,21 +95,5 @@ export class AssetLibraryService {
       defaultHost: img.defaultHost,
       mimeType: asset.mimeType,
     };
-  }
-
-  private imageMimeTypeToExtension(
-    mimeType: string | null
-  ): string | undefined {
-    const mimeTypeToExtensionMapping: Record<string, string> = {
-      "image/jpeg": "jpg",
-      "image/png": "png",
-      "image/bmp": "bmp",
-      "image/gif": "gif",
-      "image/tiff": "tif",
-      "image/webp": "webp",
-      "image/jp2": "jp2",
-      "image/avif": "avif",
-    };
-    return mimeType ? mimeTypeToExtensionMapping[mimeType] : undefined;
   }
 }
