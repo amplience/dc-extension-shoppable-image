@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import { AmplienceImageStudio } from "@amplience/image-studio-sdk/dist/esm";
+import { AmplienceImageStudio } from "@amplience/image-studio-sdk";
 
 import { ShoppableImageData } from "./ShoppableImageData";
 import { useExtensionContext } from "./ExtensionContext";
@@ -48,6 +48,7 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
         {
           url: srcImage.thumbURL,
           name: srcImage.name,
+          mimeType: srcImage.mimeType,
         },
       ]);
 
