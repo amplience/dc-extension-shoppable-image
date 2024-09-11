@@ -21,8 +21,15 @@ const ImageStudioContext = createContext<ImageStudioState>(
 const IMAGE_STUDIO_BASEPATH = "https://app.amplience.net/image-studio";
 
 export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
-  const { sdk, params, field, setThumbUrl, setField, clearUndo } =
-    useExtensionContext();
+  const {
+    sdk,
+    params,
+    field,
+    setThumbUrl,
+    setField,
+    clearUndo,
+    setAssetVersion,
+  } = useExtensionContext();
   const { changeMode, clearAi } = useEditorContext();
   const openImageStudio = async (shoppableImage: ShoppableImageData) => {
     try {
@@ -63,6 +70,7 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
         );
 
         setThumbUrl(uploadedAsset.thumbURL);
+        setAssetVersion(uploadedAsset.revisionNumber.toString());
         field!.image = imageLink;
         clearUndo!();
         clearAi();

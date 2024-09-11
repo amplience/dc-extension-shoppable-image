@@ -21,6 +21,8 @@ interface ExtensionState {
   AIService?: AIRequestService;
   thumbURL: string;
   setThumbUrl: { (x: string): void };
+  assetVersion: string;
+  setAssetVersion: { (v: string): void };
 }
 
 const defaultExtensionState: ExtensionState = {
@@ -29,6 +31,8 @@ const defaultExtensionState: ExtensionState = {
   sdkConnected: false,
   thumbURL: "",
   setThumbUrl: () => {},
+  assetVersion: "",
+  setAssetVersion: () => {},
 };
 
 const ExtensionContext = React.createContext(defaultExtensionState);
@@ -53,10 +57,10 @@ export function WithExtensionContext({
         const formValue = (await sdk.field.getValue()) as ShoppableImageData;
         let hasImage = !!formValue?.image?.id;
         const assetId = formValue?.image?.id;
-        const asset = hasImage && assetId
-          ? await sdk.assets.getById(assetId)
-          : {};
+        const asset =
+          hasImage && assetId ? await sdk.assets.getById(assetId) : {};
         const thumbURL = asset.thumbURL;
+        const assetVersion = asset.revisionNumber;
         const field = formValue || {};
         const undoHistory: ShoppableImageData[] = [];
         const redoHistory: ShoppableImageData[] = [];
@@ -70,6 +74,10 @@ export function WithExtensionContext({
           state.thumbURL = url;
         };
 
+        const setAssetVersion = (version: string) => {
+          state.assetVersion = version;
+        };
+
         const state: ExtensionState = {
           params,
           sdk,
@@ -80,6 +88,8 @@ export function WithExtensionContext({
           sdkConnected: true,
           thumbURL,
           setThumbUrl,
+          assetVersion,
+          setAssetVersion,
         };
 
         state.setField = () => {
