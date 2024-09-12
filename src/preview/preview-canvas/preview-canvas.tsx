@@ -26,8 +26,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export function PreviewCanvas() {
   const { mode, selection, setSelection, setAspect } = useEditorContext();
-  const { sdk, field, setField, setUndo, thumbURL, assetVersion } =
-    useExtensionContext();
+  const { sdk, field, setField, setUndo, thumbURL } = useExtensionContext();
   const windowSize = useWindowContext();
   const [loaded, setLoaded] = useState(false);
   const [cursor, setCursor] = useState("default");
@@ -678,7 +677,7 @@ export function PreviewCanvas() {
     src = sdk?.stagingEnvironment
       ? `https://${sdk.stagingEnvironment}/i/${
           field.image.endpoint
-        }/${encodeURIComponent(field.image.name)}?v=${assetVersion}`
+        }/${encodeURIComponent(field.image.name)}`
       : thumbURL;
 
     image = (

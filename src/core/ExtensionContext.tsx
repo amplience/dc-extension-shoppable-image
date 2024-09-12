@@ -21,8 +21,6 @@ interface ExtensionState {
   AIService?: AIRequestService;
   thumbURL: string;
   setThumbUrl: { (x: string): void };
-  assetVersion: string;
-  setAssetVersion: { (v: string): void };
 }
 
 const defaultExtensionState: ExtensionState = {
@@ -31,8 +29,6 @@ const defaultExtensionState: ExtensionState = {
   sdkConnected: false,
   thumbURL: "",
   setThumbUrl: () => {},
-  assetVersion: "",
-  setAssetVersion: () => {},
 };
 
 const ExtensionContext = React.createContext(defaultExtensionState);
@@ -74,10 +70,6 @@ export function WithExtensionContext({
           state.thumbURL = url;
         };
 
-        const setAssetVersion = (version: string) => {
-          state.assetVersion = version;
-        };
-
         const state: ExtensionState = {
           params,
           sdk,
@@ -88,8 +80,6 @@ export function WithExtensionContext({
           sdkConnected: true,
           thumbURL,
           setThumbUrl,
-          assetVersion,
-          setAssetVersion,
         };
 
         state.setField = () => {
