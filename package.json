@@ -1,8 +1,9 @@
 {
   "name": "dc-extension-shoppable-image",
-  "version": "1.1.0",
+  "version": "1.7.0",
   "private": true,
   "dependencies": {
+    "@amplience/image-studio-sdk": "^0.1.0",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.1.0",
@@ -27,6 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:static": "PUBLIC_URL=. react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -55,5 +57,4 @@
     "node": "~16.20.1",
     "npm": "~8.19.4"
   }
-
 }

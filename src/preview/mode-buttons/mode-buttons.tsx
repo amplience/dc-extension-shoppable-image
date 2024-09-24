@@ -9,11 +9,14 @@ import { useExtensionContext } from "../../core/ExtensionContext";
 import { EditorMode, useEditorContext } from "../../core/EditorContext";
 import { Box } from "@mui/material";
 import { useState } from "react";
+import { useImageStudioContext } from "../../core/ImageStudioContext";
+import ImageStudioIcon from "../../icons/ic-image-studio.svg";
 
 export function ModeButtons() {
   const { sdk, field, setField, clearUndo, setThumbUrl } =
     useExtensionContext();
   const { mode, changeMode, clearAi, setDrawerVisible } = useEditorContext();
+  const { openImageStudio } = useImageStudioContext();
 
   const [, setHover] = useState(false);
 
@@ -49,6 +52,9 @@ export function ModeButtons() {
           clearUndo();
           setField();
           break;
+        case EditorMode.ImageStudio:
+          openImageStudio(field);
+          break;
         default:
           changeMode(mode);
           setDrawerVisible(true);
@@ -83,6 +89,11 @@ export function ModeButtons() {
 
       {hasImage && (
         <div className="amp-mode-buttons">
+          <Tooltip title="Edit in Image Studio">
+            <Fab onClick={() => modeButton(EditorMode.ImageStudio)}>
+              <img src={ImageStudioIcon} alt="Edit in Image Studio icon" />
+            </Fab>
+          </Tooltip>
           <Tooltip title="Edit image & focal point">
             <Fab onClick={() => modeButton(EditorMode.EditorPoi)}>
               <EditIcon />

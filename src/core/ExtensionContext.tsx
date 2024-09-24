@@ -53,10 +53,10 @@ export function WithExtensionContext({
         const formValue = (await sdk.field.getValue()) as ShoppableImageData;
         let hasImage = !!formValue?.image?.id;
         const assetId = formValue?.image?.id;
-        const asset = hasImage && assetId
-          ? await sdk.assets.getById(assetId)
-          : {};
+        const asset =
+          hasImage && assetId ? await sdk.assets.getById(assetId) : {};
         const thumbURL = asset.thumbURL;
+        const assetVersion = asset.revisionNumber;
         const field = formValue || {};
         const undoHistory: ShoppableImageData[] = [];
         const redoHistory: ShoppableImageData[] = [];
