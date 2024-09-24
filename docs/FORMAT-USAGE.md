@@ -6,7 +6,7 @@ This document will explain what each of the fields in the partial maps to, and h
 
 ![Example of an image enriched with the Shoppable Image Extension](../media/format-example.png)
 
-In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a point of interest centered on the model, and there is a hotspot placed on top the bag and trousers.
+In the example image above, a few regions of the image have been highlighted with polygon hotspots, there is a point of interest centered on the model, and there is a hotspot placed on top of the bag and trousers.
 
 Here is the JSON for this Shoppable Image:
 
