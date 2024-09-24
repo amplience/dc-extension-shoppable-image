@@ -1,4 +1,3 @@
-
 ![Dynamic Content Shoppable Image Extension](media/screenshot.png)
 
 # Dynamic Content Shoppable Image Extension
@@ -17,15 +16,25 @@ To use the schema when imported as a partial, use this snippet:
 
 ```json
 {
-    "shoppableImage": {
-        "title": "Shoppable Image",
-        "description": "An image enriched with a focal point and hotspots.",
-        "allOf": [
-            { "$ref": "https://amplience.com/shoppable-image-partial#/definitions/shoppableImage" }
-        ]
-    }
+  "shoppableImage": {
+    "title": "Shoppable Image",
+    "description": "An image enriched with a focal point and hotspots.",
+    "allOf": [
+      {
+        "$ref": "https://amplience.com/shoppable-image-partial#/definitions/shoppableImage"
+      }
+    ]
+  }
 }
 ```
+
+## Image Studio
+
+The extension has been fully integrated with Image Studio. This allows the user to launch Image Studio and utilise its powerful tools to modify the base image.
+
+![Setup](media/edit-in-image-studio.png)
+
+You can find more information about using Image Studio in the [Amplience Studios docs](https://amplience.com/developers/docs/amplience-studios/)
 
 ## Register Extension
 
@@ -35,11 +44,11 @@ This extension needs to be [registered](https://amplience.com/docs/development/r
 
 ![Setup](media/setup.png)
 
-* Category: Content Field
-* Label: Shoppable Image _(this will appear as the tab title in the Dashboard)_
-* Name: shoppable-image _(needs to be unique with the Hub)_
-* URL: [https://shoppable-image.extensions.content.amplience.net](https://shoppable-image.extensions.content.amplience.net)
-* Description: Shoppable Image Extension _(can be left blank, if you wish)_
+- Category: Content Field
+- Label: Shoppable Image _(this will appear as the tab title in the Dashboard)_
+- Name: shoppable-image _(needs to be unique with the Hub)_
+- URL: [https://shoppable-image.extensions.content.amplience.net](https://shoppable-image.extensions.content.amplience.net)
+- Description: Shoppable Image Extension _(can be left blank, if you wish)_
 
 Note:
 You can use our deployed version of this extension (builds from the "production" branch) -
@@ -50,7 +59,18 @@ _As this is an open source project you're welcome to host your own "fork" of thi
 
 #### Permissions
 
-No additional permissions are required.
+![Permissions](media/permissions.png)
+
+API Permissions:
+
+- Read access
+- Modify access
+
+Sandbox permissions:
+
+- Allow same origin
+- Allow pop-ups
+- Allow pop-ups to escape sandbox
 
 ## Output Data Format & Usage
 

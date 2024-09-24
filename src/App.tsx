@@ -11,6 +11,7 @@ import { WithVisualizationContext } from "./visualization/visualization-context"
 import { WithWindowContext } from "./core/WindowContext";
 import { VisContainer } from "./visualization/vis-container/vis-container";
 import { Title } from "./preview/title/title";
+import { WithImageStudioContext } from "./core/ImageStudioContext";
 
 function App() {
   const params = new URL(document.location.href).searchParams;
@@ -27,15 +28,17 @@ function App() {
             </WithVisualizationContext>
           ) : (
             <WithExtensionContext>
-              <WithEditorContext>
-                <Title />
-                <div className="amp-app-clip">
-                  <EditToolbar />
-                  <PreviewCanvas />
-                  <MetadataList />
-                  <AIDrawer/>
-                </div>
-              </WithEditorContext>
+              <WithImageStudioContext>
+                <WithEditorContext>
+                  <Title />
+                  <div className="amp-app-clip">
+                    <EditToolbar />
+                    <PreviewCanvas />
+                    <MetadataList />
+                    <AIDrawer />
+                  </div>
+                </WithEditorContext>
+              </WithImageStudioContext>
             </WithExtensionContext>
           )}
         </WithWindowContext>

@@ -8,6 +8,7 @@ import {
 import { AIImageData, AIState } from "./AIImageData";
 import { InsufficientCredits } from "./dal/shoppable-image/errors/InsufficientCredits";
 import { track } from "../gainsight/gainsight";
+import { useImageStudioContext } from "./ImageStudioContext";
 
 export enum EditorMode {
   Initial,
@@ -22,6 +23,7 @@ export enum EditorMode {
   // These modes don't exist, they trigger actions.
   Swap,
   Delete,
+  ImageStudio,
 }
 
 export enum MetadataSelectionType {
@@ -58,6 +60,7 @@ interface EditorState {
   setSelection(selection: MetadataSelection | undefined): void;
   ai: AIImageData;
   toggleAIDrawer(): void;
+  toggleImageStudio(): void;
   setDrawerVisible(state: boolean): void;
   fetchAI(): Promise<void>;
   clearAi(): void;
@@ -89,6 +92,7 @@ const defaultEditorState: EditorState = {
   setDrawerVisible: (state: boolean) => {},
   setUiDisabled: (state: boolean) => {},
   uiDisabled: false,
+  toggleImageStudio: dummySetter,
 };
 
 const EditorContext = React.createContext(defaultEditorState);
@@ -98,6 +102,7 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
   const [uiDisabled, setUiDisabled] = useState(false);
 
   const { field, AIService, sdk, thumbURL } = useExtensionContext();
+  const { openImageStudio } = useImageStudioContext();
 
   useEffect(() => {
     const fetchAI = async () => {
@@ -212,6 +217,12 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
     validateSelection();
   }, [state, field]);
 
+  const toggleImageStudio = () => {
+    if (field) {
+      openImageStudio(field);
+    }
+  };
+
   const validateSelection = () => {
     if (state.selection && field) {
       if (state.selection.mode === MetadataSelectionMode.Hotspot) {
@@ -280,6 +291,7 @@ export function WithEditorContext({ children }: { children: React.ReactNode }) {
         setAspect,
         changeMode,
         toggleAIDrawer,
+        toggleImageStudio,
         setSelection,
         uiDisabled,
         setUiDisabled,
