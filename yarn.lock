@@ -12,10 +12,10 @@
   resolved "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.3.2.tgz"
   integrity sha512-DA5a1C0gD/pLOvhv33YMrbf2FK3oUzwNl9oOJqE4XVjuEtt6XIakRcsd7eLiOSPkp1kTRQGICTA8cKra/vFbjw==
 
-"@amplience/image-studio-sdk@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@amplience/image-studio-sdk/-/image-studio-sdk-0.1.0.tgz#9dbce10b3333306ad717bad3b0006c9266d0e1da"
-  integrity sha512-efmAm2AdKlhKhsKQ/SVBD4iity5AOUIFGpzcldNPCWjXJMo+ARPFPwz/ncXVDvJcoNVMYQzJzGP50qNIP2pj/w==
+"@amplience/image-studio-sdk@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@amplience/image-studio-sdk/-/image-studio-sdk-0.4.0.tgz#ed97e9fef2587ef89a0caf8131dca07b717610de"
+  integrity sha512-LxGXNONEz6Pt7f6yhGAnWRy1ZKR//etan1uKIckz0fANPCoPVVzCMU02iNZYWKF0tQPkxNG2CQ5eS/bK2re79A==
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.1"
