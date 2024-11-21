@@ -18,7 +18,7 @@ const ImageStudioContext = createContext<ImageStudioState>(
   defaultImageStudioState
 );
 
-const IMAGE_STUDIO_BASEPATH = "https://app.amplience.net/image-studio";
+const IMAGE_STUDIO_BASEPATH = "https://app.amplience.net";
 
 export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
   const { sdk, params, field, setThumbUrl, setField, clearUndo } =
@@ -41,8 +41,12 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
       const srcImage = await assetLibraryService.getAssetById(imageId);
 
       const imageStudioSdk = new AmplienceImageStudio({
-        baseUrl: params?.imageStudio?.basePath || IMAGE_STUDIO_BASEPATH,
+        domain: params?.imageStudio?.basePath || IMAGE_STUDIO_BASEPATH,
       });
+
+      if (sdk.hub.organizationId) {
+        imageStudioSdk.withDecodedOrgId(sdk.hub.organizationId);
+      }
 
       const studioResponse = await imageStudioSdk.editImages([
         {
