@@ -1,5 +1,10 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import { AmplienceImageStudio } from "@amplience/image-studio-sdk";
+import {
+  AmplienceImageStudio,
+  ImageSaveEventData,
+  ImageStudioEventType,
+  SDKEventType,
+} from "@amplience/image-studio-sdk";
 
 import { ShoppableImageData } from "./ShoppableImageData";
 import { useExtensionContext } from "./ExtensionContext";
@@ -42,37 +47,39 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
 
       const imageStudioSdk = new AmplienceImageStudio({
         domain: params?.imageStudio?.basePath || IMAGE_STUDIO_BASEPATH,
-      });
+      }).withEventListener(ImageStudioEventType.ImageSave, async (data) => {
+        const imageData = data as ImageSaveEventData;
+        if (imageData.image && shoppableImage.image) {
+          const uploadedAsset = await assetLibraryService.uploadAsset(
+            imageData.image,
+            srcImage
+          );
+          const imageLink = assetLibraryService.createImageLinkFromAsset(
+            shoppableImage.image,
+            uploadedAsset
+          );
 
+          setThumbUrl(uploadedAsset.thumbURL);
+          field!.image = imageLink;
+          clearUndo!();
+          clearAi();
+          setField!();
+          changeMode(EditorMode.EditorPoi);
+          return SDKEventType.Success;
+        }
+        return SDKEventType.Fail;
+      });
       if (sdk.hub.organizationId) {
         imageStudioSdk.withDecodedOrgId(sdk.hub.organizationId);
       }
 
-      const studioResponse = await imageStudioSdk.editImages([
+      await imageStudioSdk.editImages([
         {
           url: srcImage.thumbURL,
           name: srcImage.name,
           mimeType: srcImage.mimeType,
         },
       ]);
-
-      if (studioResponse?.image) {
-        const uploadedAsset = await assetLibraryService.uploadAsset(
-          studioResponse.image,
-          srcImage
-        );
-        const imageLink = assetLibraryService.createImageLinkFromAsset(
-          shoppableImage.image,
-          uploadedAsset
-        );
-
-        setThumbUrl(uploadedAsset.thumbURL);
-        field!.image = imageLink;
-        clearUndo!();
-        clearAi();
-        setField!();
-        changeMode(EditorMode.EditorPoi);
-      }
     } catch (e) {
       console.error("Image Studio error:", e);
     }
