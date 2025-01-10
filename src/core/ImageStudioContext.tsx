@@ -10,6 +10,7 @@ import { ShoppableImageData } from "./ShoppableImageData";
 import { useExtensionContext } from "./ExtensionContext";
 import { AssetLibraryService } from "./dal/asset-library-service/AssetLibraryService";
 import { EditorMode, useEditorContext } from "./EditorContext";
+import { Asset } from "./dal/asset-library-service/types/Asset";
 
 interface ImageStudioState {
   openImageStudio: (shoppableImage: ShoppableImageData) => Promise<void>;
@@ -29,6 +30,39 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
   const { sdk, params, field, setThumbUrl, setField, clearUndo } =
     useExtensionContext();
   const { changeMode, clearAi } = useEditorContext();
+
+  const handleOnSaveCallback = async (
+    data: any,
+    shoppableImage: ShoppableImageData,
+    assetLibraryService: AssetLibraryService,
+    srcImage: Asset
+  ): Promise<SDKEventType | null> => {
+    try {
+      const imageData = data as ImageSaveEventData;
+      if (imageData.image && shoppableImage.image) {
+        const uploadedAsset = await assetLibraryService.uploadAsset(
+          imageData.image,
+          srcImage
+        );
+        const imageLink = assetLibraryService.createImageLinkFromAsset(
+          shoppableImage.image,
+          uploadedAsset
+        );
+
+        setThumbUrl(uploadedAsset.thumbURL);
+        field!.image = imageLink;
+        clearUndo!();
+        clearAi();
+        setField!();
+        changeMode(EditorMode.EditorPoi);
+        return SDKEventType.Success;
+      }
+      return SDKEventType.Fail;
+    } catch (e) {
+      console.error(e);
+      return SDKEventType.Fail;
+    }
+  };
   const openImageStudio = async (shoppableImage: ShoppableImageData) => {
     try {
       if (!sdk) {
@@ -48,28 +82,14 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
       const imageStudioSdk = new AmplienceImageStudio({
         domain: params?.imageStudio?.basePath || IMAGE_STUDIO_BASEPATH,
       }).withEventListener(ImageStudioEventType.ImageSave, async (data) => {
-        const imageData = data as ImageSaveEventData;
-        if (imageData.image && shoppableImage.image) {
-          const uploadedAsset = await assetLibraryService.uploadAsset(
-            imageData.image,
-            srcImage
-          );
-          const imageLink = assetLibraryService.createImageLinkFromAsset(
-            shoppableImage.image,
-            uploadedAsset
-          );
-
-          setThumbUrl(uploadedAsset.thumbURL);
-          field!.image = imageLink;
-          clearUndo!();
-          clearAi();
-          setField!();
-          changeMode(EditorMode.EditorPoi);
-          return SDKEventType.Success;
-        }
-        return SDKEventType.Fail;
+        return await handleOnSaveCallback(
+          data,
+          shoppableImage,
+          assetLibraryService,
+          srcImage
+        );
       });
-      if (sdk.hub.organizationId) {
+      if (sdk?.hub?.organizationId) {
         imageStudioSdk.withDecodedOrgId(sdk.hub.organizationId);
       }
 

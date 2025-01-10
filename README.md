@@ -23,7 +23,7 @@ You can find more information about using Image Studio in the [Amplience Studios
 
 The shoppable image extension has a rather complicated structure for the field it writes, so it's recommended that you put the schema in a partial. You can find the full partial definition in `shoppable-image-partial.json` in the base of this repository.
 
-- Log in, go to Development -> Content type schemas -> create schema -> code from scratch
+- Log in, go to Development -> Content type schemas -> Create schema -> Code from scratch
 - Enter "https://amplience.com/shoppable-image-partial" as your ID (feel free to use another ID)
 - Validation level: "partial"
 - Click "create schema"
@@ -92,7 +92,7 @@ Sandbox permissions:
 
 ### Assign the extension to schema
 
-- Go to development -> content type schema -> create schema -> code from scratch
+- Go to Development -> Content type schema -> Create schema -> Code from scratch
 - Enter "https://amplience.com/shoppable-image-content-type" as your ID (feel free to use another ID)
 - Validation level "content type"
 -  Assign the "Shoppable Image" extension to the `"properties"` field. (listed within "add extension" in the top right hand corner of your editor)
