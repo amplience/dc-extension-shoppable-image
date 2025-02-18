@@ -8,26 +8,6 @@ If you want to get started after cloning this repo, remember to sync packages wi
 
 This project requires Node 16.x to build.
 
-## Partial for Shoppabble Image Field and Configuration
-
-The shoppable image extension has a rather complicated structure for the field it writes, so it's recommended that you put the schema in a partial. You can find the full partial definition in `shoppable-image-partial.json` in the base of this repository.
-
-To use the schema when imported as a partial, use this snippet:
-
-```json
-{
-  "shoppableImage": {
-    "title": "Shoppable Image",
-    "description": "An image enriched with a focal point and hotspots.",
-    "allOf": [
-      {
-        "$ref": "https://amplience.com/shoppable-image-partial#/definitions/shoppableImage"
-      }
-    ]
-  }
-}
-```
-
 ## Image Studio
 
 The extension has been fully integrated with Image Studio. This allows the user to launch Image Studio and utilise its powerful tools to modify the base image.
@@ -36,11 +16,30 @@ The extension has been fully integrated with Image Studio. This allows the user 
 
 You can find more information about using Image Studio in the [Amplience Studios docs](https://amplience.com/developers/docs/amplience-studios/)
 
-## Register Extension
 
-This extension needs to be [registered](https://amplience.com/docs/development/registeringextensions.html) against a Hub with in the Dynamic Content application (Developer -> Extensions), for it to load within that Hub.
+## How to install
 
-### Setup
+### Partial for Shoppabble Image Field and Configuration
+
+The shoppable image extension has a rather complicated structure for the field it writes, so it's recommended that you put the schema in a partial. You can find the full partial definition in `shoppable-image-partial.json` in the base of this repository.
+
+- Log in, go to Development -> Content type schemas -> Create schema -> Code from scratch
+- Enter "https://amplience.com/shoppable-image-partial" as your ID (feel free to use another ID)
+- Validation level: "partial"
+- Click "create schema"
+- Once in the editor set the value of `"definitions"` to be the contents of `shoppable-image-partial.json`
+
+  ```
+  "definitions": <contents of shoppable-image-partial.json>
+  ```
+
+- save it.
+
+### Register Extension
+
+This extension needs to be [registered](https://amplience.com/docs/development/registeringextensions.html) against a Hub with in the Dynamic Content application (Development -> Extensions-> Register extension), for it to load within that Hub.
+
+#### Setup
 
 ![Setup](media/setup.png)
 
@@ -71,6 +70,35 @@ Sandbox permissions:
 - Allow same origin
 - Allow pop-ups
 - Allow pop-ups to escape sandbox
+
+#### Snippets
+![Snippets](media/snippets.png)
+- Label: shoppable-image
+- Paste this snippet into the editor:
+```
+{
+    "title": "Shoppable Image",
+    "description": "An image enriched with a focal point and hotspots.",
+    "allOf": [
+      {
+        "$ref": "https://amplience.com/shoppable-image-partial#/definitions/shoppableImage"
+      }
+    ]
+}
+```
+- Hit save.
+
+>NB: if you have given your partial a unique ID, replace the above `$ref` URI to be "<YOUR_PARTIAL_SCHEMA_ID>#/definitions/shoppableImage"
+
+### Assign the extension to schema
+
+- Go to Development -> Content type schema -> Create schema -> Code from scratch
+- Enter "https://amplience.com/shoppable-image-content-type" as your ID (feel free to use another ID)
+- Validation level "content type"
+-  Assign the "Shoppable Image" extension to the `"properties"` field. (listed within "add extension" in the top right hand corner of your editor)
+- A default field name will be provided. Rename this to "shoppableImage".
+- Save it. Go back to development and create a content type for your new schema.
+- Go to Production and make as many content items as your heart desires.
 
 ## Output Data Format & Usage
 

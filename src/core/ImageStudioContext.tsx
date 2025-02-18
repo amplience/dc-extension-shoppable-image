@@ -1,10 +1,16 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import { AmplienceImageStudio } from "@amplience/image-studio-sdk";
+import {
+  AmplienceImageStudio,
+  ImageSaveEventData,
+  ImageStudioEventType,
+  SDKEventType,
+} from "@amplience/image-studio-sdk";
 
 import { ShoppableImageData } from "./ShoppableImageData";
 import { useExtensionContext } from "./ExtensionContext";
 import { AssetLibraryService } from "./dal/asset-library-service/AssetLibraryService";
 import { EditorMode, useEditorContext } from "./EditorContext";
+import { Asset } from "./dal/asset-library-service/types/Asset";
 
 interface ImageStudioState {
   openImageStudio: (shoppableImage: ShoppableImageData) => Promise<void>;
@@ -18,12 +24,45 @@ const ImageStudioContext = createContext<ImageStudioState>(
   defaultImageStudioState
 );
 
-const IMAGE_STUDIO_BASEPATH = "https://app.amplience.net/image-studio";
+const IMAGE_STUDIO_BASEPATH = "https://app.amplience.net";
 
 export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
   const { sdk, params, field, setThumbUrl, setField, clearUndo } =
     useExtensionContext();
   const { changeMode, clearAi } = useEditorContext();
+
+  const handleOnSaveCallback = async (
+    data: any,
+    shoppableImage: ShoppableImageData,
+    assetLibraryService: AssetLibraryService,
+    srcImage: Asset
+  ): Promise<SDKEventType | null> => {
+    try {
+      const imageData = data as ImageSaveEventData;
+      if (imageData.image && shoppableImage.image) {
+        const uploadedAsset = await assetLibraryService.uploadAsset(
+          imageData.image,
+          srcImage
+        );
+        const imageLink = assetLibraryService.createImageLinkFromAsset(
+          shoppableImage.image,
+          uploadedAsset
+        );
+
+        setThumbUrl(uploadedAsset.thumbURL);
+        field!.image = imageLink;
+        clearUndo!();
+        clearAi();
+        setField!();
+        changeMode(EditorMode.EditorPoi);
+        return SDKEventType.Success;
+      }
+      return SDKEventType.Fail;
+    } catch (e) {
+      console.error(e);
+      return SDKEventType.Fail;
+    }
+  };
   const openImageStudio = async (shoppableImage: ShoppableImageData) => {
     try {
       if (!sdk) {
@@ -41,34 +80,26 @@ export function WithImageStudioContext({ children }: PropsWithChildren<{}>) {
       const srcImage = await assetLibraryService.getAssetById(imageId);
 
       const imageStudioSdk = new AmplienceImageStudio({
-        baseUrl: params?.imageStudio?.basePath || IMAGE_STUDIO_BASEPATH,
+        domain: params?.imageStudio?.basePath || IMAGE_STUDIO_BASEPATH,
+      }).withEventListener(ImageStudioEventType.ImageSave, async (data) => {
+        return await handleOnSaveCallback(
+          data,
+          shoppableImage,
+          assetLibraryService,
+          srcImage
+        );
       });
+      if (sdk?.hub?.organizationId) {
+        imageStudioSdk.withDecodedOrgId(sdk.hub.organizationId);
+      }
 
-      const studioResponse = await imageStudioSdk.editImages([
+      await imageStudioSdk.editImages([
         {
           url: srcImage.thumbURL,
           name: srcImage.name,
           mimeType: srcImage.mimeType,
         },
       ]);
-
-      if (studioResponse?.image) {
-        const uploadedAsset = await assetLibraryService.uploadAsset(
-          studioResponse.image,
-          srcImage
-        );
-        const imageLink = assetLibraryService.createImageLinkFromAsset(
-          shoppableImage.image,
-          uploadedAsset
-        );
-
-        setThumbUrl(uploadedAsset.thumbURL);
-        field!.image = imageLink;
-        clearUndo!();
-        clearAi();
-        setField!();
-        changeMode(EditorMode.EditorPoi);
-      }
     } catch (e) {
       console.error("Image Studio error:", e);
     }
